@@ -1,2 +1,2 @@
-# Web-Dev-Basics-Learning-System
-This web based learning seeks to make the process of learning the basics of web development fun and simple! Packed with interactive content to help your learning journey, the Web Dev Basics Learning System will excellently prepare you to begin your web development journey! 
+# Project Description
+This project aims to develop a learning system that effectively teaches key concepts covered in the COMP 2511 class. The system will serve as an interactive educational tool designed to enhance students' learning of the basics of client side web development, including semantic HTML, building HTML forms and tables, HTTP methods (‘GET’ and POST’), along with modern CSS techniques. The platform will include engaging learning modules, quizzes, and a progress tracker to help students reinforce their learning through practical exercises.
