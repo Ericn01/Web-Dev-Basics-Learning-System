@@ -48,5 +48,5 @@ INSERT INTO FAQs (faq_id, question, answer) VALUES
 
 -- Insert data into the Feedback table
 INSERT INTO Feedback (feedback_id, user_id, feedback_text) VALUES
-(1, 1, 'Thanks to this platform, I’m now an HTML master!'),
+(1, 1, 'Thanks to this platform, I am now an HTML master!'),
 (2, 2, 'This course could use some additional CSS examples.');
