@@ -6,7 +6,6 @@ CREATE DATABASE WebDevLearning;
 USE WebDevLearning;
 
 -- TABLE 1: Users - Here we store user information for registration, login, and profile management
-
 CREATE TABLE Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -16,7 +15,6 @@ CREATE TABLE Users (
 );
 
 -- TABLE 2: Modules - Contains the various learning modules (CSS, HTML) 
-
 CREATE TABLE Modules (
     module_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(50) NOT NULL,
@@ -27,7 +25,6 @@ CREATE TABLE Modules (
 );
 
 -- TABLE 3: Quizzes - Stores quiz data for each module
-
 CREATE TABLE Quizzes (
     quiz_id INT AUTO_INCREMENT PRIMARY KEY,
     module_id INT NOT NULL,
@@ -36,7 +33,6 @@ CREATE TABLE Quizzes (
 );
 
 -- TABLE 4: Questions - Stores individual questions for each quiz.
-
 CREATE TABLE Questions (
     question_id INT AUTO_INCREMENT PRIMARY KEY,
     quiz_id INT NOT NULL,
@@ -46,7 +42,6 @@ CREATE TABLE Questions (
 );
 
 -- TABLE 5: Options - Stores answer options for each question.
-
 CREATE TABLE Options (
     option_id INT AUTO_INCREMENT PRIMARY KEY,
     question_id INT NOT NULL,
@@ -55,7 +50,6 @@ CREATE TABLE Options (
 );
 
 -- TABLE 6: UserProgress - Tracks users' progress across modules and quizzes.
-
 CREATE Table UserProgress (
     progress_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -69,7 +63,6 @@ CREATE Table UserProgress (
 );
 
 -- TABLE 7: FAQs - Stores frequently asked questions and their answers (Not sure if we're actually going to implement this)
-
 CREATE TABLE FAQs (
     faq_id INT AUTO_INCREMENT PRIMARY KEY,
     question VARCHAR(255) NOT NULL,
@@ -77,7 +70,6 @@ CREATE TABLE FAQs (
 );
 
 -- TABLE 8: Feedback - Collects user feedback and suggestions
-
 CREATE TABLE Feedback (
     feedback_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -85,7 +77,6 @@ CREATE TABLE Feedback (
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE -- delete all feedback for a user if their user_id is deleted
 );
-
 
 -- Now that we've created the tables, we can insert some dummy data into them (mostly for testing purposes, will be removed once we have an actual DB running on the VM)
 
@@ -122,7 +113,7 @@ INSERT INTO Options (question_id, option_text) VALUES
 (2, '<hr>'),
 (3, 'Cascading Style Sheets'),
 (3, 'Colorful Style Sections'),
-(3, 'Creative Styles Selections')
+(3, 'Creative Styles Selections'),
 (4, 'font-size'),
 (4, 'text-size');
 
