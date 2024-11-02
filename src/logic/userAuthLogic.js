@@ -33,6 +33,7 @@ const createUser = async (username, email, password) => {
 const handleRegistration = async (req, res) => {
     try {
         const {username, email, password} = req.body;
+
         if (!username || !email || !password){
             return res.status(400).json({message: 'All fields are required to register'});
         }

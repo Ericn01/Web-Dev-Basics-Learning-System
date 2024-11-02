@@ -3,6 +3,31 @@
  */
 const { connectToDB } = require('../config/dbconnect')
 
+// Testing function to retrieve all user profiles
+const getAllUserProfiles = async() => {
+    const connection = await connectToDB();
+    const [userProfiles] = await connection.query(
+        `SELECT Users.user_id, Users.username, Users.email, UserProgress.quiz_id, UserProgress.score
+        FROM Users 
+        LEFT JOIN UserProgress ON Users.user_id = UserProgress.user_id`
+    );
+    await connection.end();
+    return {userProfiles: userProfiles};
+}
+
+// Test route handler
+
+const handleGetAllUserProfiles = async (req, res) => {
+    try {
+        const userProfiles = await getAllUserProfiles();
+        res.json({
+            profileData: userProfiles
+        })
+      } catch (err) {
+        res.status(500).json({ message: 'Error retrieving profile', err});
+      }
+}
+
 // Retrieve the information from a given user in the database
 const getUserProfile = async (userId) => {
     const connection = await connectToDB();
@@ -97,5 +122,6 @@ const handleUpdateProfile = async (req, res) => {
 
 module.exports = {
     handleGetProfile,
-    handleUpdateProfile
+    handleUpdateProfile,
+    handleGetAllUserProfiles // REMOVE LATER, TESTING ONLY
 };
