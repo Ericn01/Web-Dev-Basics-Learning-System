@@ -70,7 +70,7 @@ CREATE Table UserProgress (
 -- TABLE 7: FAQs - Stores frequently asked questions and their answers (Not sure if we're actually going to implement this)
 
 CREATE TABLE FAQs (
-    faq_id INT PRIMARY KEY,
+    faq_id INT AUTO_INCREMENT PRIMARY KEY,
     question VARCHAR(255) NOT NULL,
     answer VARCHAR(255) NOT NULL
 );
@@ -78,7 +78,7 @@ CREATE TABLE FAQs (
 -- TABLE 8: Feedback - Collects user feedback and suggestions
 
 CREATE TABLE Feedback (
-    feedback_id INT PRIMARY KEY,
+    feedback_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     feedback_text TEXT, 
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
