@@ -1,5 +1,6 @@
 -- This script is responsible for creating all the tables on our backend database (hosted on google cloud compute VM)
 
+DROP DATABASE IF EXISTS WebDevLearning; -- Remove the database if it already exists (This script should only be ran once on a given MySQL instance)
 
 CREATE DATABASE WebDevLearning;
 USE WebDevLearning;
@@ -84,3 +85,59 @@ CREATE TABLE Feedback (
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE -- delete all feedback for a user if their user_id is deleted
 );
+
+
+-- Now that we've created the tables, we can insert some dummy data into them (mostly for testing purposes, will be removed once we have an actual DB running on the VM)
+
+-- 1) Users table data - note that the hashes passwords will not look anything like this
+INSERT INTO Users (username, email, password_hash) VALUES
+('john_doe43', 'john.d@example.com', 'hashed_password_1'),
+('eniel662', 'eniel662@mtroyal.ca', 'hashed_passes_do_not_look_like_this'),
+('jane_doe12', 'jane.d@example.com', 'hashed_password_2');
+
+-- 2) Modules table - The basic structure of a module, where content will contain HTML code
+INSERT INTO Modules (title, module_description, content, banner_image_path) VALUES
+('Introduction to HTML', 'Learn the basics of HTML', '<p>This is the HTML basics content</p>', '/images/html_banner.jpg'),
+('Introduction to CSS', 'Learn the basics of CSS', '<p>This is the CSS basics content</p>', '/images/css_banner.jpg');
+
+-- 3) Quizzes table - Pretty simple stuff, a foreign key to the module it belongs to and the name of the quiz
+INSERT INTO Quizzes (module_id, title) VALUES
+(1, 'HTML Basics Quiz'),
+(2, 'CSS Basics Quiz');
+
+-- 4) Questions table - Each quiz has multiple questions, so we have a foreign key for that as well
+INSERT INTO Questions (quiz_id, question_text, correct_answer) VALUES
+(1, 'What does HTML stand for?', 'Hyper Text Markup Language'),
+(1, 'What is the correct HTML element for inserting a line break?', '<br>'),
+(2, 'What does CSS stand for?', 'Cascading Style Sheets'),
+(2, 'Which CSS property controls text size?', 'font-size');
+
+-- 5) Options table - Every question has multiple options so even more foreign keys, here it becomes clear that the data would be deeply nested in a document-based DB. 
+INSERT INTO Options (question_id, option_text) VALUES
+(1, 'Hyper Text Markup Language'),
+(1, 'Home Tool Markup Language'),
+(1, 'Hyperlinks Text Markdown Language'),
+(2, '<br>'),
+(2, '<lb>'),
+(2, '<hr>'),
+(3, 'Cascading Style Sheets'),
+(3, 'Colorful Style Sections'),
+(3, 'Creative Styles Selections')
+(4, 'font-size'),
+(4, 'text-size');
+
+-- 6) UserProgress table - keeps track of the progress that a given user has so far. module_id may be redundant, haven't thought it through much tbh.
+INSERT INTO UserProgress (user_id, module_id, quiz_id, score, completed_at) VALUES
+(1, 1, 1, 85, NOW()),
+(1, 2, 2, 90, NOW()),
+(2, 1, NULL, NULL, NULL);
+
+-- 7) FAQ table - Data for the frequently asked questions part of the website.
+INSERT INTO FAQs (faq_id, question, answer) VALUES
+(1, 'What is the best way to learn HTML and CSS?', 'There is no precise best way to learn these languages, but by using our website and practicing often you will be great in no time!'),
+(2, 'Who built this website?', 'Anton Angeles, Tim Ho, Simon Truong, and Eric Nielsen.');
+
+-- 8) Feedback table - feedback for the website. Could be part of a 'testimonies section'. Might modify into comments for each quiz instead??
+INSERT INTO Feedback (feedback_id, user_id, feedback_text) VALUES
+(1, 1, 'Thanks to this platform, I am now an HTML master!'),
+(2, 2, 'This course could use some additional CSS examples.');

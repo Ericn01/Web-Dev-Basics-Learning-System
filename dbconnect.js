@@ -1,8 +1,11 @@
 // Importing mysql2
-const mysql = require('mysql2')
+const mysql = require('mysql2/promise')
 require('dotenv').config()
 
 // Setting up database config variables 
+
+// This is the one that will be used in product, but right now I just want to test with a local connection
+/** 
 const dbconnect = mysql.createPool({
     host: process.env.HOST_IP,
     user: process.env.USER,
@@ -10,6 +13,13 @@ const dbconnect = mysql.createPool({
     database: process.env.DATABASE, 
     port: process.env.PORT,
 }).promise();
+*/
+
+const dbconnect = await mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    database: ''
+})
 
 // Query some data (test)
 async function getUsers() {
@@ -19,4 +29,6 @@ async function getUsers() {
 
 const users = getUsers();
 console.log(users)
+
+module.exports = { dbconnect };
 
