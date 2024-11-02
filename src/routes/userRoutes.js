@@ -3,8 +3,8 @@ const router = express.Router();
 const { handleGetProfile, handleUpdateProfile } = require('../logic/userLogic');
 const { authenticateToken } = require('../middleware/authJWT')
 
-// 
-router.get('/webdev-learning/api/user/profile', authenticateToken, handleGetProfile);
-router.put('/webdev-learning/api/user/profile', authenticateToken, handleUpdateProfile);
+// Get and update user profile routes.
+router.get('/user/profile', authenticateToken, handleGetProfile);
+router.put('/user/profile', authenticateToken, handleUpdateProfile);
 
 module.exports = router;

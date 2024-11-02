@@ -7,10 +7,10 @@ require('dotenv').config();
 const app = express();
 
 app.use(express.json()); // middleware that helps with parsin requests.
-app.use('/', userAuthRoutes);
-app.use('/', userRoutes);
+app.use('/webdev-learning/api', userAuthRoutes);
+app.use('/webdev-learning/api', userRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`The server is running on port ${PORT}`);
+    console.log(`The server is running on port ${PORT}. Listening for incoming HTTP requests...`);
 });

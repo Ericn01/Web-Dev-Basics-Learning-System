@@ -18,7 +18,6 @@ const getUserProfile = async (userId) => {
     return { user: users[0], progress };
 };
   
-
 const updateUserProfile = async (userId, updates) => {
     try{
     const connection = await connectToDB();

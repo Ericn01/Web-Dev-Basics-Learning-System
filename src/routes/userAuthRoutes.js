@@ -4,8 +4,8 @@ const { handleRegistration, handleLogin, handleLogout } = require('../logic/user
 const { authenticateToken } = require('../middleware/authJWT');
 
 // Connecting the user post routes (authentication routes) to the logic functions.
-router.post('/webdev-learning/api/register', handleRegistration);
-router.post('/webdev-learning/api/login', handleLogin);
-router.post('/webdev-learning/api/logout', authenticateToken, handleLogout);
+router.post('/register', handleRegistration);
+router.post('/login', handleLogin);
+router.post('/logout', authenticateToken, handleLogout);
 
 module.exports = router;
