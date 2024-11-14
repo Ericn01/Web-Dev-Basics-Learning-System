@@ -4,7 +4,7 @@
 
 const { connectToDB } = require('../config/dbconnect')
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken') --> We don't need this right now
 
 // This is a helper function that helps with logins and registration.
 const findUserByUsername = async (username) => {
@@ -65,13 +65,8 @@ const handleLogin = async (req, res) => {
             return res.status(401).json({ message: 'Invalid username or password' });
           }
       
-          const token = jwt.sign(
-            { id: user.user_id, username: user.username },
-            process.env.JWT_SECRET,
-            { expiresIn: '24h' }
-          );
       
-          res.json({ token, message: 'Login successful' });
+          res.status(200).json({message: 'Login successful' });
         } catch (error) {
           res.status(500).json({ message: 'Error during login', error: error.message });
         }
@@ -79,7 +74,7 @@ const handleLogin = async (req, res) => {
 
 // Have yet to actually implement this. For now we just send a message.
 const handleLogout = (req, res) => {
-    res.json({message: 'logged out successfully'});
+    res.status(200).json({message: 'logged out successfully'});
 };
 
 module.exports = {

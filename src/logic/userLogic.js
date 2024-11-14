@@ -1,5 +1,5 @@
 /**
- * This file contains the 
+ * This file contains the logic for creating users, updating user info, and retrieving a user's information
  */
 const { connectToDB } = require('../config/dbconnect')
 
@@ -123,5 +123,5 @@ const handleUpdateProfile = async (req, res) => {
 module.exports = {
     handleGetProfile,
     handleUpdateProfile,
-    handleGetAllUserProfiles // REMOVE LATER, TESTING ONLY
+    handleGetAllUserProfiles 
 };

@@ -41,6 +41,7 @@ CREATE TABLE Questions (
     FOREIGN KEY (quiz_id) REFERENCES Quizzes(quiz_id) ON DELETE CASCADE
 );
 
+
 -- TABLE 5: Options - Stores answer options for each question.
 CREATE TABLE Options (
     option_id INT AUTO_INCREMENT PRIMARY KEY,
