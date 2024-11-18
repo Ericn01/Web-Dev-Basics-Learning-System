@@ -3,8 +3,25 @@ const router = express.Router();
 const { conn } = require('../config/db')
 
 const handleGetModules = async (req,res) => {
-    try {}
-    catch {}
+    try {
+        const connection = await conn();
+        [rows] = await connection.execute('SELECT * From Modules');
+        await connection.end();
+        if (rows.length > 0) {
+            const { module_id, title, module_description, content, banner_image_path, created_at } = rows[0];
+            res.status(200).json({
+                success: true,
+                message: `We found the following module with module ID ${id}`,
+                data: {module_id, title, module_description, content, banner_image_path}
+            });
+        }
+        else {
+            res.status(404).json({message: 'No modules have been found'});
+        }
+    }
+    catch(err) {
+        res.status(500).json({message: 'A server error occured...'})
+    }
 }
 
 const handleGetModulesByID = async (req,res) => {
