@@ -1,4 +1,3 @@
-const e = require('express');
 const express = require('express');
 const router = express.Router();
 const { conn } = require('../config/db')
@@ -22,7 +21,7 @@ const handleGetModulesByID = async (req,res) => {
             res.status(200).json({
                 success: true,
                 message: `We found the following module with module ID ${id}`,
-                data: {module_id, title, module_description, content, banner_image_path, created_at}
+                data: {module_id, title, module_description, content, banner_image_path}
             });
         } else {
             res.status(404).json({message: 'Module not found'})
