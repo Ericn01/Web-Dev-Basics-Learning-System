@@ -13,7 +13,6 @@ const handleGetQuizzes = async (req, res) => {
 
         const quizData = await Promise.all(
             quizzes.map(async (quiz) => {
-                // Fetch questions for this quiz
                 const [questions] = await connection.execute(
                     'SELECT * FROM Questions WHERE quiz_id = ?',
                     [quiz.quiz_id]
@@ -27,12 +26,11 @@ const handleGetQuizzes = async (req, res) => {
                         );
                         return {
                             ...question,
-                            options, // Include options for this question
+                            options, 
                         };
                     })
                 );
 
-                // Return quiz along with its questions and options
                 return {
                     ...quiz,
                     questions: questionsWithOptions,
