@@ -124,8 +124,71 @@ const handleQuizSubmit = async(req,res) => {
     catch{}
 }
 
+const handleQuizAddQuestion = async(req, res) => {
+    try{
+        const { id } = req.params;
+        const { questions } = req.body;
+
+        if (!questions || !Array.isArray(questions) || questions.length === 0 ) {
+            return res.status(400).json({
+                success:false,
+                message: 'Invalid questions format. Questions should be a non-empty array'
+            });
+        }
+
+        const connection = await conn();
+
+        const [quizRows] = await connection.execute ('SELECT * FROM Quizzes WHERE quiz_id = ?', [id])
+        if (quizRows.length === 0) {
+            await connection.end();
+            return res.status(404).json({
+                success:false,
+                message:'Quiz does not exist'
+            });
+        }
+
+        for (const question of questions) {
+            const { question_text, correct_answer, options } = question;
+
+            if (!question_text || !correct_answer || !Array.isArray(options) || options.length < 2) {
+                return res.status(400).json({
+                    success:false,
+                    message: 'Each question must have a question_text, a correct_answer, and atleast two options'
+                });
+            }
+            
+            const [insertQuestionResult] = await connection.execute(
+                'INSERT INTO Questions (quiz_id, question_text, correct_answer) VALUES (?, ?, ?)',
+                [id, question_text, correct_answer]
+            );
+
+            const questionId = insertQuestionResult.insertId;
+
+            for (const optionText of options) {
+                await connection.execute(
+                    'INSERT INTO Options (question_id, option_text) VALUES (?, ?)',
+                    [questionId, optionText]
+                );
+            }
+
+            await connection.end();
+
+            // Send a success response
+            res.status(201).json({
+                success: true,
+                message: 'Questions added successfully.',
+            });
+        }
+    }
+    catch (err) {
+        console.error('An error occurred while adding questions to the quiz...', err.message);
+        res.status(500).json({ success: false, message: 'A server error occurred.' });
+    }
+}
+
 router.get('/quizzes', handleGetQuizzes);
 router.get('quizzes/:id', handleGetQuizzesByID);
 router.post('/:id/submit', handleQuizSubmit);
+router.post('/quizzes/:id/add', handleQuizAddQuestion);
 
 module.exports = router;
