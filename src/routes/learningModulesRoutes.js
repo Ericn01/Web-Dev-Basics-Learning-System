@@ -1,34 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const { conn } = require('../config/db')
+const { connectToDB } = require('../config/dbconnect')
 
-const handleGetModules = async (req,res) => {
+const handleGetModules = async (req, res) => {
     try {
-        const connection = await conn();
-        [rows] = await connection.execute('SELECT * From Modules');
+        const connection = await connectToDB();
+        const [rows] = await connection.execute('SELECT * FROM Modules');
         await connection.end();
         if (rows.length > 0) {
-            const { module_id, title, module_description, content, banner_image_path, created_at } = rows[0];
             res.status(200).json({
                 success: true,
-                message: `We found the following module with module ID ${id}`,
-                data: {module_id, title, module_description, content, banner_image_path}
+                message: 'Modules retrieved successfully',
+                data: rows // Send all rows of data
             });
+        } else {
+            res.status(404).json({ message: 'No modules found' });
         }
-        else {
-            res.status(404).json({message: 'No modules have been found'});
-        }
+    } catch (err) {
+        console.error('Error retrieving modules:', err);
+        res.status(500).json({ message: 'A server error occurred' });
     }
-    catch(err) {
-        res.status(500).json({message: 'A server error occured...'})
-    }
-}
+};
 
 const handleGetModulesByID = async (req,res) => {
     try{
         let id = req.params.id;
 
-        const connection = await conn();
+        const connection = await connectToDB();
         const [rows] = await connection.execute(
             'SELECT * FROM Modules WHERE module_id = ?', [id]
         );

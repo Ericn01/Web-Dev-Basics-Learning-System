@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router();
+const { connectToDB } = require('../config/dbconnect')
 
 const handleGetQuizzes = async (req, res) => {
     try {
-        const connection = await conn();
+        const connection = await connectToDB();
 
         const [quizzes] = await connection.execute('SELECT * FROM Quizzes');
 
@@ -51,16 +52,16 @@ const handleGetQuizzes = async (req, res) => {
     }
 };
 
-const handleGetQuizzesByID = async (req,res) => { // To be changed later when person responsible implements questions routes
-    try{
+const handleGetQuizzesByID = async (req, res) => {
+    try {
         let id = req.params.id;
 
-        const connection = await conn();
+        const connection = await connectToDB();
         const [rows] = await connection.execute(
             `SELECT
                 q.quiz_id,
-                q.title AS quiz_title
-                qs.question_id
+                q.title AS quiz_title,
+                qs.question_id,
                 qs.question_text,
                 qs.correct_answer,
                 o.option_id,
@@ -68,7 +69,7 @@ const handleGetQuizzesByID = async (req,res) => { // To be changed later when pe
             FROM Quizzes q
             LEFT JOIN Questions qs ON q.quiz_id = qs.quiz_id
             LEFT JOIN Options o ON qs.question_id = o.question_id
-            WHERE q.quiz_ id = ?
+            WHERE q.quiz_id = ?
             ORDER BY qs.question_id, o.option_id;`,
             [id]
         );
@@ -76,8 +77,9 @@ const handleGetQuizzesByID = async (req,res) => { // To be changed later when pe
         await connection.end();
 
         if (rows.length === 0) {
-            return res.status(404).json({message: 'Quiz not found with the specified ID'})
+            return res.status(404).json({ message: 'Quiz not found with the specified ID' });
         }
+
         const quiz = {
             quiz_id: rows[0].quiz_id,
             title: rows[0].quiz_title,
@@ -106,42 +108,42 @@ const handleGetQuizzesByID = async (req,res) => { // To be changed later when pe
         });
 
         res.status(200).json({
-            success:true,
+            success: true,
             message: `We found quiz with quiz ID ${id}`,
             data: quiz
         });
+    } catch (err) {
+        console.error('An error occurred while finding the quiz with the specified ID', err.message);
+        res.status(500).json({ message: 'A server error occurred...' });
     }
-    catch(err){
-        console.error('An error occured while finding the quiz with the specified ID', err.message);
-        res.status(500).json({message: 'A server error occured...'});
-    }
-}
+};
+
 
 const handleQuizSubmit = async(req,res) => {
     try{}
     catch{}
 }
 
-const handleQuizAddQuestion = async(req, res) => {
-    try{
+const handleQuizAddQuestion = async (req, res) => {
+    try {
         const { id } = req.params;
         const { questions } = req.body;
 
-        if (!questions || !Array.isArray(questions) || questions.length === 0 ) {
+        if (!questions || !Array.isArray(questions) || questions.length === 0) {
             return res.status(400).json({
-                success:false,
-                message: 'Invalid questions format. Questions should be a non-empty array'
+                success: false,
+                message: 'Invalid questions format. Questions should be a non-empty array',
             });
         }
 
-        const connection = await conn();
+        const connection = await connectToDB();
 
-        const [quizRows] = await connection.execute ('SELECT * FROM Quizzes WHERE quiz_id = ?', [id])
+        const [quizRows] = await connection.execute('SELECT * FROM Quizzes WHERE quiz_id = ?', [id]);
         if (quizRows.length === 0) {
             await connection.end();
             return res.status(404).json({
-                success:false,
-                message:'Quiz does not exist'
+                success: false,
+                message: 'Quiz does not exist',
             });
         }
 
@@ -149,12 +151,13 @@ const handleQuizAddQuestion = async(req, res) => {
             const { question_text, correct_answer, options } = question;
 
             if (!question_text || !correct_answer || !Array.isArray(options) || options.length < 2) {
+                await connection.end(); 
                 return res.status(400).json({
-                    success:false,
-                    message: 'Each question must have a question_text, a correct_answer, and atleast two options'
+                    success: false,
+                    message: 'Each question must have a question_text, a correct_answer, and at least two options',
                 });
             }
-            
+
             const [insertQuestionResult] = await connection.execute(
                 'INSERT INTO Questions (quiz_id, question_text, correct_answer) VALUES (?, ?, ?)',
                 [id, question_text, correct_answer]
@@ -168,24 +171,23 @@ const handleQuizAddQuestion = async(req, res) => {
                     [questionId, optionText]
                 );
             }
-
-            await connection.end();
-
-            // Send a success response
-            res.status(201).json({
-                success: true,
-                message: 'Questions added successfully.',
-            });
         }
-    }
-    catch (err) {
+
+
+        await connection.end();
+        return res.status(201).json({
+            success: true,
+            message: 'Questions added successfully.',
+        });
+    } catch (err) {
         console.error('An error occurred while adding questions to the quiz...', err.message);
         res.status(500).json({ success: false, message: 'A server error occurred.' });
     }
-}
+};
+
 
 router.get('/quizzes', handleGetQuizzes);
-router.get('quizzes/:id', handleGetQuizzesByID);
+router.get('/quizzes/:id', handleGetQuizzesByID);
 router.post('/:id/submit', handleQuizSubmit);
 router.post('/quizzes/:id/add', handleQuizAddQuestion);
 
