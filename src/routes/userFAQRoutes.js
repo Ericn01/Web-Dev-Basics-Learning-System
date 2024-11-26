@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const { connectToDB } = require('../config/dbconnect')
 
-// The logic for this function will be to either return an item list by name (if a name query param is provided), or all items if none is provided
 const handleGetFAQs = async (req, res) => {
     try {
-        const connection = await conn();
+        const connection = await connectToDB();
 
         [rows] = await connection.execute('SELECT * FROM FAQs');
         await connection.end();
@@ -27,12 +27,10 @@ const handleGetFAQs = async (req, res) => {
     }
 };
 
-// Add new feedback through user submission
 const handleAddNewFeedback = async (req, res) => {
     try {
         const { user_id, feedback_text } = req.body;
 
-        // Adding some input validation
         if (!user_id || !feedback_text) {
             return res.status(400).json({
                 success: false,
@@ -40,7 +38,6 @@ const handleAddNewFeedback = async (req, res) => {
             });
         }
 
-        // Validating user_id to make sure it's a positive number
         if (user_id < 1) {
             return res.status(400).json({
                 success: false,
@@ -48,18 +45,15 @@ const handleAddNewFeedback = async (req, res) => {
             });
         }
 
-        // Create a database connection
-        const connection = await conn(); // Assuming `conn` is a function to create a DB connection
+        const connection = await connectToDB();
 
-        // Prepare and execute the insert query
         await connection.execute(
             'INSERT INTO Feedback (user_id, feedback_text) VALUES (?, ?)', 
-            [user_id, feedback_text] // Use parameterized queries to prevent SQL injection
+            [user_id, feedback_text] 
         );
 
-        await connection.end(); // Close the database connection
+        await connection.end();
 
-        // Respond with a success message
         res.status(201).json({
             success: true,
             message: 'Feedback added successfully.',
@@ -75,11 +69,7 @@ const handleAddNewFeedback = async (req, res) => {
     }
 }
 
-
 router.get('/faqs', handleGetFAQs); 
 router.post('/feedback', handleAddNewFeedback)
 
 module.exports = router;
-
-
-
