@@ -24,7 +24,8 @@ const getProgress = async (username) => {
 const updateProgress = async (username) => {
     const connection = await connectToDB();
     const [users] = connection.execute(
-        
+        'SET completed_at = NOW() WHERE user_id = (SELECT user_id FROM Users WHERE username = ?) AND quiz_id = {quiz_id}',
+        [username]
     );
     await connection.end();
     return users;
