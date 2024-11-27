@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors'); 
+
+// Importing all of the necessary routes
 const userAuthRoutes = require('./src/routes/userAuthRoutes');
 const userRoutes = require('./src/routes/userRoutes');
 const learningModuleRoutes = require('./src/routes/learningModulesRoutes');
