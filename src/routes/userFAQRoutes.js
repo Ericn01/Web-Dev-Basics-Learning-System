@@ -5,9 +5,9 @@ const { connectToDB } = require('../config/dbconnect')
 const handleGetFAQs = async (req, res) => {
     try {
         const connection = await connectToDB();
-
-        [rows] = await connection.execute('SELECT * FROM FAQs');
+        const [rows] = await connection.execute('SELECT question, answer FROM FAQs');
         await connection.end();
+
         if (rows.length > 0) {
             res.status(200).json({
                 success: true,
@@ -15,17 +15,14 @@ const handleGetFAQs = async (req, res) => {
                 data: rows
             });
         } else {
-            res.status(404).json({ message: 'No item have been found' });
+            res.status(404).json({ success: false, message: 'No items have been found' });
         }
-    }
-    
-    catch(err) {
-        console.error(
-            req.query.item_name ? 'An error occurred while querying for FAQs: ' : err.message
-        );
-        res.status(500).json({ message: 'A server error occured...'})
+    } catch (err) {
+        console.error('An error occurred while querying for FAQs: ', err.message);
+        res.status(500).json({ success: false, message: 'A server error occurred...' });
     }
 };
+
 
 const handleAddNewFeedback = async (req, res) => {
     try {
