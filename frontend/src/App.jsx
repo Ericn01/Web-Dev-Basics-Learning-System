@@ -11,6 +11,9 @@ import ProfilePage from './components/ProfilePage';
 import ProgressPage from './components/ProgressPage';
 import HttpDemo from './components//HTTPDemo';
 import FaqComponent from './components/FaqComponent';
+import { ThemeProvider } from './services/themeContext';
+
+import './styling/theme.css';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -19,39 +22,41 @@ const ProtectedRoute = ({ children }) => {
 
 const App = () => {
   return (
-    <AuthProvider>
-      <Router>
-        <Layout>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/" element={<HomePage />} />
-            <Route path="/modules" element={<ModulesPage />} />
-            <Route path="/modules/:id" element={<ModuleDetail />} />
-            <Route path="/quizzes" element={<QuizzesPage />} />
-            <Route path="/quizzes/:id" element={<QuizDetail />} />
-            <Route 
-              path="/profile" 
-              element={
-                <ProtectedRoute>
-                  <ProfilePage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/progress" 
-              element={
-                <ProtectedRoute>
-                  <ProgressPage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route path="/http-demo" element={<HttpDemo />} />
-            <Route path="/faq" element={<FaqComponent />} />
-          </Routes>
-        </Layout>
-      </Router>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <Layout>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/" element={<HomePage />} />
+              <Route path="/modules" element={<ModulesPage />} />
+              <Route path="/modules/:id" element={<ModuleDetail />} />
+              <Route path="/quizzes" element={<QuizzesPage />} />
+              <Route path="/quizzes/:id" element={<QuizDetail />} />
+              <Route 
+                path="/profile" 
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/progress" 
+                element={
+                  <ProtectedRoute>
+                    <ProgressPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route path="/http-demo" element={<HttpDemo />} />
+              <Route path="/faq" element={<FaqComponent />} />
+            </Routes>
+          </Layout>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 

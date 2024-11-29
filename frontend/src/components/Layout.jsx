@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../services/authContext';
+import { useTheme } from '../services/themeContext';
+
 import { 
   Book, 
   Code,
@@ -14,7 +16,9 @@ import {
   BookOpen,
   PenTool,
   HelpCircle,
-  Terminal
+  Terminal,
+  Sun,
+  Moon
 } from 'lucide-react';
 import '../styling/LayoutStyles.css';
 
@@ -25,6 +29,8 @@ const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+  const { isDarkMode, toggleTheme } = useTheme();
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -128,6 +134,7 @@ const Layout = ({ children }) => {
                 </button>
               </div>
             )}
+
           </div>
         </div>
       </nav>
@@ -160,6 +167,9 @@ const Layout = ({ children }) => {
               ))}
             </div>
           )}
+            <button onClick={toggleTheme} className="theme-toggle" aria-label="Toggle theme">
+                {isDarkMode ? <Sun /> : <Moon />}
+            </button>
         </nav>
       </aside>
 

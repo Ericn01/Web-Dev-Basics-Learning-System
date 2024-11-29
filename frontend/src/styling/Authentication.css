@@ -1,27 +1,33 @@
 /* Auth.css */
 .auth-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-  }
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--bg-secondary);
+}
   
-  .auth-card {
-    background: white;
-    padding: 32px;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
+.auth-card {
+  background: var(--card-bg);
+  padding: 32px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
+}
   
-  .auth-header {
-    position: relative;
-    text-align: center;
-    margin-bottom: 32px;
-  }
+.auth-header h1 {
+  font-size: 1.875rem;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.auth-header p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
   
   .back-button {
     position: absolute;
@@ -40,17 +46,6 @@
   
   .back-button:hover {
     background: #f3f4f6;
-  }
-  
-  .auth-header h1 {
-    font-size: 1.875rem;
-    color: #111827;
-    margin-bottom: 8px;
-  }
-  
-  .auth-header p {
-    color: #6b7280;
-    font-size: 1rem;
   }
   
   .auth-form {
@@ -73,22 +68,19 @@
     height: 20px;
   }
   
+
   .input-group input {
     width: 100%;
     padding: 12px 12px 12px 40px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     font-size: 1rem;
-    transition: border-color 0.2s;
-  }
-  
-  .input-group input:focus {
-    outline: none;
-    border-color: #4f46e5;
+    background-color: var(--input-bg);
+    color: var(--text-primary);
   }
   
   .submit-button {
-    background: #4f46e5;
+    background: var(--accent-color);
     color: white;
     padding: 12px;
     border: none;
@@ -97,9 +89,26 @@
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s;
-    margin-top: 8px;
   }
   
+  .submit-button:hover:not(:disabled) {
+    background: var(--accent-hover);
+  }
+  
+  .error-message {
+    background: var(--error-bg);
+    color: var(--error-text);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .input-group input:focus {
+    outline: none;
+    border-color: #4f46e5;
+  }
+  
+
   .submit-button:hover:not(:disabled) {
     background: #4338ca;
   }

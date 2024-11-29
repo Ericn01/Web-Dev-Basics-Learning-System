@@ -11,26 +11,26 @@
   
   .quiz-header h1 {
     font-size: 2rem;
-    color: #333;
+    color: var(--text-primary);
     margin-bottom: 16px;
   }
   
   .quiz-progress {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 1.1rem;
   }
   
   .question-container {
-    background: white;
+    background: var(--bg-primary);
     padding: 32px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--card-shadow);
     margin-bottom: 24px;
   }
   
   .question-container h2 {
     font-size: 1.2rem;
-    color: #333;
+    color: var(--text-primary);
     margin-bottom: 24px;
   }
   
@@ -42,25 +42,25 @@
   
   .option-button {
     padding: 16px;
-    background: #f8f9fa;
-    border: 2px solid #e9ecef;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
     border-radius: 8px;
     text-align: left;
     font-size: 1rem;
-    color: #333;
+    color: var(--text-primary);
     cursor: pointer;
     transition: all 0.2s;
   }
   
   .option-button:hover {
-    background: #f1f3f5;
-    border-color: #dee2e6;
+    background: var(--bg-primary);
+    border-color: var(--border-color);
   }
   
   .option-button.selected {
-    background: #e11d48;
-    border-color: #e11d48;
-    color: white;
+    background: var(--accent-color);
+    border-color: var(--border-color);
+    color: var(--text-primary);
   }
   
   .quiz-navigation {
@@ -79,8 +79,8 @@
   }
   
   .nav-button {
-    background: #f8f9fa;
-    color: #333;
+    background: var(--bg-primary);
+    color: var(--text-primary);
   }
   
   .nav-button:disabled {
@@ -89,7 +89,7 @@
   }
   
   .submit-button {
-    background: #e11d48;
+    background: var(--accent-color);
     color: white;
   }
   
@@ -99,7 +99,7 @@
   }
   
   .quiz-results {
-    background: white;
+    background: var(--bg-primary);
     padding: 32px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -108,7 +108,7 @@
   
   .score-display h2 {
     font-size: 1.5rem;
-    color: #333;
+    color: var(--text-primary);
     margin-bottom: 16px;
   }
   

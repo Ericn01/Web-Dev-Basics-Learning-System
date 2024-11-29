@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
@@ -26,13 +26,13 @@
 
 .form-group input {
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 1rem;
 }
 
 .form-group input:disabled {
-  background-color: #f8f9fa;
+  background-color: var(--bg-secondary);
   cursor: not-allowed;
 }
 
@@ -55,21 +55,21 @@
 }
 
 .save-button {
-  background: #4f46e5;
-  color: white;
+  background: var(--accent-color);
+  color: var(--text-primary);
   border: none;
 }
 
 .edit-button {
-  background: #4f46e5;
-  color: white;
+  background: var(--accent-color);
+  color: var(--text-primary);
   border: none;
 }
 
 .cancel-button {
-  background: #f8f9fa;
-  color: #666;
-  border: 1px solid #ddd;
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 
 /* Progress Specific Styles */
@@ -85,25 +85,25 @@
   align-items: center;
   gap: 16px;
   padding: 20px;
-  background: #f8f9fa;
+  background: var(--bg-secondary);
   border-radius: 8px;
 }
 
 .stat-icon {
   width: 32px;
   height: 32px;
-  color: #4f46e5;
+  color: var(--accent-color);
 }
 
 .stat-info h3 {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 4px;
 }
 
 .stat-info p {
   font-size: 1.25rem;
-  color: #333;
+  color: var(--text-secondary);
   font-weight: bold;
 }
 
@@ -113,7 +113,7 @@
 
 .recent-activity h2 {
   font-size: 1.5rem;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 16px;
 }
 
@@ -128,25 +128,25 @@
   align-items: center;
   gap: 16px;
   padding: 16px;
-  background: #f8f9fa;
+  background: var(--bg-secondary);
   border-radius: 8px;
 }
 
 .activity-icon {
   width: 24px;
   height: 24px;
-  color: #4f46e5;
+  color: var(--accent-color);
 }
 
 .activity-info h3 {
   font-size: 1rem;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .activity-info p {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .no-activity {
@@ -165,8 +165,8 @@
 }
 
 .error-message {
-  background: #fee2e2;
-  color: #dc2626;
+  background: var(--error-bg);
+  color: var(--error-text);
 }
 
 .success-message {

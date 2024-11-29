@@ -49,7 +49,7 @@ const handleRegistration = async (req, res) => {
         const token = jwt.sign(
             { username: username },
             process.env.JWT_SECRET,
-            { expiresIn: '24h' }
+            { expiresIn: '300h' }
         );
         
         res.status(201).json({
@@ -66,7 +66,7 @@ const handleLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await findUserByEmail(email);
-        
+        console.log(`Email: ${email}, Password: ${password}`);
         if (!user) {
             return res.status(401).json({ message: 'Invalid username or password' });
         }

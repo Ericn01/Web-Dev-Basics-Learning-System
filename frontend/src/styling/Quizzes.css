@@ -11,12 +11,12 @@
   
   .quizzes-header h1 {
     font-size: 2rem;
-    color: #333;
+    color: var(--text-primary);
     margin-bottom: 8px;
   }
   
   .quizzes-header p {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 1.1rem;
   }
   
@@ -31,11 +31,11 @@
     display: flex;
     align-items: center;
     padding: 20px;
-    background: white;
+    background: var(--bg-primary);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-decoration: none;
-    color: inherit;
+    color: var(--text-primary);
     transition: transform 0.2s, box-shadow 0.2s;
   }
   
@@ -50,10 +50,10 @@
     justify-content: center;
     width: 48px;
     height: 48px;
-    background-color: #fff0f7;
+    background-color: var(--bg-secondary);
     border-radius: 8px;
     margin-right: 16px;
-    color: #e11d48;
+    color: var(--accent-color);
   }
   
   .quiz-content {
@@ -63,7 +63,7 @@
   .quiz-content h2 {
     font-size: 1.1rem;
     margin-bottom: 8px;
-    color: #333;
+    color: var(--text-primary);
   }
   
   .quiz-meta {
@@ -71,7 +71,7 @@
     align-items: center;
     gap: 16px;
     font-size: 0.9rem;
-    color: #666;
+    color: var(--text-secondary);
   }
   
   .quiz-questions {

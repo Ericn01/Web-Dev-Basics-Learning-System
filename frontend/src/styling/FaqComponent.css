@@ -11,24 +11,24 @@
 
 .faq-header h1 {
   font-size: 2rem;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .faq-header p {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
 .faq-content {
-  background: white;
+  background: var(--bg-primary);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--card-shadow);
   overflow: hidden;
 }
 
 .faq-item {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .faq-item:last-child {
@@ -45,34 +45,34 @@
   border: none;
   cursor: pointer;
   text-align: left;
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.1rem;
   font-weight: 500;
   transition: background-color 0.2s;
 }
 
 .faq-question:hover {
-  background-color: #f8f9fa;
+  background-color: var(--bg-secondary);
 }
 
 .faq-icon {
   width: 20px;
   height: 20px;
-  color: #666;
+  color: var(--text-secondary);
   transition: transform 0.2s;
 }
 
 .faq-item.active .faq-question {
-  background-color: #f8f9fa;
-  color: #4f46e5;
+  background-color: var(--bg-secondary);
+  color: var(--accent-color);
 }
 
 .faq-answer {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-  background-color: #fff;
-  color: #666;
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -84,28 +84,45 @@
 .faq-loader {
   text-align: center;
   padding: 48px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .faq-error {
   text-align: center;
   padding: 24px;
-  color: #dc2626;
-  background: #fee2e2;
+  color: var(--error-text);
+  background: var(--error-bg);
   border-radius: 8px;
   margin: 24px;
 }
 
+
 @media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+  
+  .username {
+    display: none;
+  }
+  
+  .main-content.sidebar-open {
+    margin-left: 0;
+  }
+  
+  .sidebar {
+    z-index: 900;
+  }
+  
   .faq-container {
     padding: 16px;
   }
-
+  
   .faq-question {
     padding: 16px 20px;
     font-size: 1rem;
   }
-
+  
   .faq-answer.show {
     padding: 0 20px 16px;
   }

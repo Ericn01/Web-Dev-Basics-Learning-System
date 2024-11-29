@@ -6,8 +6,8 @@
 
 /* Hero Section */
 .hero-section {
-  background: linear-gradient(135deg, #4f46e5 0%, #2d3748 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--bg-secondary) 100%);
+  color: var(--bg-primary);
   padding: 80px 24px;
   text-align: center;
 }
@@ -22,12 +22,14 @@
   font-weight: 700;
   margin-bottom: 24px;
   line-height: 1.2;
+  color: var(--text-primary)
 }
 
 .hero-content p {
   font-size: 1.25rem;
   margin-bottom: 32px;
   opacity: 0.9;
+  color: var(--text-secondary)
 }
 
 .cta-button {
@@ -35,8 +37,8 @@
   align-items: center;
   gap: 8px;
   padding: 16px 32px;
-  background: white;
-  color: #4f46e5;
+  background: var(--bg-primary);
+  color: var(--accent-color);
   border: none;
   border-radius: 8px;
   font-size: 1.125rem;
@@ -64,23 +66,25 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 8px;
+  color: var(--text-primary);
 }
 
 .stat-card p {
   font-size: 1.125rem;
   opacity: 0.8;
+  color: var(--text-secondary);
 }
 
 /* Features Section */
 .features-section {
   padding: 80px 24px;
-  background: #f8fafc;
+  background: var(--bg-secondary);
 }
 
 .features-section h2 {
   text-align: center;
   font-size: 2.5rem;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 48px;
 }
 
@@ -93,15 +97,15 @@
 }
 
 .feature-card {
-  background: white;
+  background: var(--bg-primary);
   padding: 32px;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--card-shadow);
   text-align: center;
 }
 
 .feature-icon {
-  color: #4f46e5;
+  color: var(--accent-color);
   width: 48px;
   height: 48px;
   margin-bottom: 24px;
@@ -109,12 +113,12 @@
 
 .feature-card h3 {
   font-size: 1.5rem;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 16px;
 }
 
 .feature-card p {
-  color: #6b7280;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -126,7 +130,7 @@
 .curriculum-section h2 {
   text-align: center;
   font-size: 2.5rem;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 48px;
 }
 
@@ -142,9 +146,9 @@
   align-items: center;
   gap: 24px;
   padding: 24px;
-  background: white;
+  background: var(--bg-primary);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--card-shadow);
   transition: transform 0.2s;
 }
 
@@ -155,8 +159,8 @@
 .module-number {
   width: 40px;
   height: 40px;
-  background: #4f46e5;
-  color: white;
+  background: var(--accent-color);
+  color: var(--bg-primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -170,23 +174,23 @@
 
 .module-content h3 {
   font-size: 1.25rem;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .module-content p {
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .module-arrow {
-  color: #9ca3af;
+  color: var(--text-secondary);
   width: 24px;
   height: 24px;
 }
 
 /* Auth Modal */
 .auth-modal {
-  background: white;
+  background: var(--bg-primary);
   padding: 32px;
   border-radius: 8px;
   width: 100%;
@@ -201,14 +205,14 @@
   background: none;
   border: none;
   font-size: 24px;
-  color: #9ca3af;
+  color: var(--text-secondary);
   cursor: pointer;
 }
 
 .auth-modal h2 {
   text-align: center;
   font-size: 1.5rem;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 24px;
 }
 
@@ -222,7 +226,7 @@
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: #9ca3af;
+  color: var(--text-secondary);
   width: 20px;
   height: 20px;
 }
@@ -230,16 +234,18 @@
 .input-group input {
   width: 100%;
   padding: 12px 12px 12px 40px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 1rem;
+  background: var(--input-bg);
+  color: var(--text-primary);
 }
 
 .submit-button {
   width: 100%;
   padding: 12px;
-  background: #4f46e5;
-  color: white;
+  background: var(--accent-color);
+  color: var(--bg-primary);
   border: none;
   border-radius: 6px;
   font-size: 1rem;
@@ -257,11 +263,12 @@
   align-items: center;
   text-align: center;
   margin: 24px 0;
+  color: var(--text-secondary);
 }
 
 .divider::before,
 .divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
 }

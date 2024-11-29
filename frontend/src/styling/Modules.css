@@ -11,12 +11,12 @@
 
 .modules-header h1 {
   font-size: 2rem;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .modules-header p {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
@@ -31,11 +31,11 @@
   display: flex;
   align-items: center;
   padding: 20px;
-  background: white;
+  background: var(--bg-primary);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--card-shadow);
   text-decoration: none;
-  color: inherit;
+  color: var(--text-primary);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -50,10 +50,10 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  background-color: #f0f4ff;
+  background-color: var(--bg-secondary);
   border-radius: 8px;
   margin-right: 16px;
-  color: #4f46e5;
+  color: var(--accent-color);
 }
 
 .module-content {
@@ -63,26 +63,26 @@
 .module-content h2 {
   font-size: 1.1rem;
   margin-bottom: 4px;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .module-content p {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .module-arrow {
-  color: #999;
+  color: var(--accent-color);
 }
 
 .loader {
   text-align: center;
   padding: 48px;
-  color: #666;
+  color: var(--accent-color);
 }
 
 .error-message {
   text-align: center;
   padding: 48px;
-  color: #ef4444;
+  color: var(--error-text);
 }
