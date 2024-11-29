@@ -7,11 +7,11 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken') 
 
 // This is a helper function that helps with logins and registration.
-const findUserByUsername = async (username) => {
+const findUserByEmail = async (email) => {
     const connection = await connectToDB();
     const [users] = connection.execute(
-        'SELECT * FROM Users WHERE username = ?',
-        [username]
+        'SELECT * FROM Users WHERE email = ?',
+        [email]
     );
     await connection.end();
     return users[0];
@@ -38,7 +38,7 @@ const handleRegistration = async (req, res) => {
             return res.status(400).json({ message: 'All fields are required to register' });
         }
         
-        const existingUser = await findUserByUsername(username);
+        const existingUser = await findUserByEmail(email);
         if (existingUser) {
             return res.status(400).json({ message: 'The given username already exists in the database' });
         }
@@ -64,8 +64,8 @@ const handleRegistration = async (req, res) => {
 // Logic to handle a user login request.
 const handleLogin = async (req, res) => {
     try {
-        const { username, password } = req.body;
-        const user = await findUserByUsername(username);
+        const { email, password } = req.body;
+        const user = await findUserByEmail(email);
         
         if (!user) {
             return res.status(401).json({ message: 'Invalid username or password' });
@@ -80,7 +80,7 @@ const handleLogin = async (req, res) => {
         const token = jwt.sign(
             { username: user.username },
             process.env.JWT_SECRET,
-            { expiresIn: '24h' }
+            { expiresIn: '300h' }
         );
         
         res.status(200).json({

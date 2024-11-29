@@ -41,6 +41,7 @@ const QuizDetail = () => {
   const handleSubmit = async () => {
     try {
       const response = await api.post(`/quizzes/${id}/submit`, {
+        user_id: user.id,
         answers: Object.entries(answers).map(([questionId, answer]) => ({
           question_id: parseInt(questionId),
           answer
@@ -50,6 +51,7 @@ const QuizDetail = () => {
       setSubmitted(true);
     } catch (err) {
       setError('Failed to submit quiz. Please try again.');
+      console.error(err);
     }
   };
 
@@ -87,19 +89,18 @@ const QuizDetail = () => {
       {!submitted ? (
         <div className="quiz-content">
           <div className="question-container">
-            <h2>{currentQuestionData.text}</h2>
+            <h2>{currentQuestionData.question_text}</h2>
             <div className="options-container">
-              {currentQuestionData.options.map((option, index) => (
+            {currentQuestionData.options.map((option, index) => (
                 <button
-                  key={index}
-                  className={`option-button ${
-                    answers[currentQuestionData.question_id] === option ? 'selected' : ''
-                  }`}
-                  onClick={() => handleAnswerSelect(currentQuestionData.question_id, option)}
+                    key={option.option_id} 
+                    className={`option-button ${
+                    answers[currentQuestionData.question_id] === option.option_id ? 'selected' : ''}`}
+                    onClick={() => handleAnswerSelect(currentQuestionData.question_id, option.option_id)}
                 >
-                  {option}
+                    {option.option_text}  
                 </button>
-              ))}
+            ))}
             </div>
           </div>
 

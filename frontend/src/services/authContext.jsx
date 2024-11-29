@@ -32,9 +32,17 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const response = await api.post('/login', credentials);
-    const { token } = response.data.token;
-    localStorage.setItem('token', token);
-    api.defaults.headers.common['Authorization'] = token;
+    const { token } = response.data;
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('userEmail', credentials.email);
+    await fetchUserProfile();
+  };
+
+  const signup = async (userData) => {
+    const response = await api.post('/register', userData);
+    const { token } = response.data;
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('userEmail', userData.email);
     await fetchUserProfile();
   };
 
@@ -47,8 +55,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout, loading }}>
-      {!loading && children}
+    <AuthContext.Provider value={{ user, isAuthenticated, login, signup, logout }}>
+       {children}
     </AuthContext.Provider>
   );
 };

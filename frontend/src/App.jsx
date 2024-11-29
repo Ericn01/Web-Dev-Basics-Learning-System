@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './services/authContext';
+import { Login, Signup } from './components/Authentication';
 import Layout from './components/Layout';
 import HomePage from './components/HomePage';
 import ModulesPage from './components/ModulesPage';
@@ -22,6 +23,8 @@ const App = () => {
       <Router>
         <Layout>
           <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/modules" element={<ModulesPage />} />
             <Route path="/modules/:id" element={<ModuleDetail />} />

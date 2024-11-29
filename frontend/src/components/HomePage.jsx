@@ -18,16 +18,11 @@ import api from '../services/api';
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);  
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    username: ''
-  });
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userEmail, setUserEmail] = useState('');
   const [hasAccount, setHasAccount] = useState(false);
-  const [error, setError] = useState(null);
+
+  const handleAuthClick = () => {
+    navigate(hasAccount ? 'login' : 'signup');
+  }
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
@@ -183,67 +178,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {isModalOpen && (
-        <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
-          <div className="auth-modal" onClick={e => e.stopPropagation()}>
-            <button 
-              className="close-button"
-              onClick={() => setIsModalOpen(false)}
-            >
-              ×
-            </button>
-            <h2>{hasAccount ? 'Welcome Back' : 'Create Your Account'}</h2>
-            {error && <div className="error-message">{error}</div>}
-            <form onSubmit={handleFormSubmit}>
-              {!hasAccount && (
-                <div className="input-group">
-                  <User className="input-icon" />
-                  <input
-                    type="text"
-                    placeholder="Username"
-                    value={formData.username}
-                    onChange={(e) => setFormData({...formData, username: e.target.value})}
-                    required
-                  />
-                </div>
-              )}
-              <div className="input-group">
-                <Mail className="input-icon" />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={formData.email}
-                  onChange={handleEmailChange}
-                  required
-                />
-              </div>
-              <div className="input-group">
-                <Lock className="input-icon" />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({...formData, password: e.target.value})}
-                  required
-                />
-              </div>
-              <button type="submit" className="submit-button">
-                {hasAccount ? 'Log In' : 'Create Account'}
-              </button>
-            </form>
-            <div className="social-login">
-              <div className="divider">
-                <span>Or continue with</span>
-              </div>
-              <button className="github-button">
-                <Github className="github-icon" />
-                GitHub
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+     </div>
   );
 };
 
