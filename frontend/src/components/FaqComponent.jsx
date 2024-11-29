@@ -1,47 +1,70 @@
 import React, { useState, useEffect } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import '../styling/FaqComponent.css';
+import api from '../services/api';
 
 const FaqComponent = () => {
   const [faqs, setFaqs] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Fetch FAQs from the backend API
   useEffect(() => {
     const fetchFaqs = async () => {
       try {
-        const response = await fetch('http://localhost:3000/webdev-learning/api/faqs');
-        const data = await response.json();
-
-        if (data.success) {
-          setFaqs(data.data);
-        } else {
-          console.error('Failed to fetch FAQs');
-        }
+        const response = await api.get('/faqs');
+        const faqs = response.data.data;
+        setFaqs(faqs);
+        setLoading(false);
       } catch (error) {
-        console.error('An error occurred while fetching FAQs:', error);
+        setError('Failed to load FAQs. Please try again later.');
+        setLoading(false);
       }
     };
-
     fetchFaqs();
   }, []);
-
-  console.log(faqs)
 
   const toggleQuestion = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
+  if (loading) {
+    return <div className="faq-loader">Loading FAQs...</div>;
+  }
+
+  if (error) {
+    return <div className="faq-error">{error}</div>;
+  }
+
   return (
     <div className="faq-container">
-      <h2>Frequently asked questions</h2>
-      <div className="faq-list">
+      <header className="faq-header">
+        <h1>Frequently Asked Questions</h1>
+        <p>Find answers to common questions about our learning platform</p>
+      </header>
+
+      <div className="faq-content">
         {faqs.map((faq, index) => (
-          <div key={index} className="faq-item">
-            <div className="faq-question" onClick={() => toggleQuestion(index)}>
-              {faq.question}
-              <span className="faq-toggle">{activeIndex === index ? '-' : '+'}</span>
+          <div 
+            key={index} 
+            className={`faq-item ${activeIndex === index ? 'active' : ''}`}
+          >
+            <button 
+              className="faq-question" 
+              onClick={() => toggleQuestion(index)}
+              aria-expanded={activeIndex === index}
+            >
+              <span>{faq.question}</span>
+              {activeIndex === index ? (
+                <ChevronUp className="faq-icon" />
+              ) : (
+                <ChevronDown className="faq-icon" />
+              )}
+            </button>
+            <div className={`faq-answer ${activeIndex === index ? 'show' : ''}`}>
+              {faq.answer}
             </div>
-            {activeIndex === index && <div className="faq-answer">{faq.answer}</div>}
           </div>
         ))}
       </div>

@@ -1,0 +1,33 @@
+.profile-container,
+.progress-container {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.profile-header,
+.progress-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.profile-header h1,
+.progress-header h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.profile-header p,
+.progress-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.profile-content,
+.progress-content {
+  background: white;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

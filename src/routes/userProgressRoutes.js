@@ -1,32 +1,133 @@
 const express = require('express');
 const router = express.Router();
-const { conn } = require('../config/db')
+const { connectToDB } = require('../config/db')
+const { authenticateToken } = require('../middleware/authJWT');
 
 // Getting progress of logged-in user across modules
 
 const getProgress = async (username) => {
     try {
         const connection = await connectToDB();
-        const [users] = connection.execute(
-            'SELECT Users.username, UserProgress.* FROM Users u JOIN UserProgress p ON u.user_id = p.user_id WHERE u.username = ?',
-            [username] 
+        const [progress] = connection.execute(
+            `SELECT 
+                u.username, 
+                p.progress_id,
+                p.module_id,
+                p.quiz_id,
+                p.score,
+                p.completed_at 
+                FROM Users u 
+                JOIN UserProgress p ON u.user_id = p.user_id 
+                WHERE u.user_id = ?`,
+            [user_id] 
         );
         await connection.end();
-        res.status(201).json({message: 'User was registered successfully! Welcome, ', username})
-        return users;
+        return progress;
     } catch (err) {
-        res.status(500).json({message: 'Oops! An error occured while updating progress of the user: ', error: err.message})
-    }
+        throw new Error(`Error fetching progress: ${err.message}`);    }
 };
 
 // Updating user progress when completing a module or quiz
 
-const updateProgress = async (username) => {
-    const connection = await connectToDB();
-    const [users] = connection.execute(
-        'SET completed_at = NOW() WHERE user_id = (SELECT user_id FROM Users WHERE username = ?) AND quiz_id = {quiz_id}',
-        [username]
-    );
-    await connection.end();
-    return users;
-}
+const updateModuleProgress = async (userId, moduleId) => {
+    try {
+        const connection = await connectToDB();
+        await connection.execute(
+            `INSERT INTO UserProgress (user_id, module_id, completed_at)
+            VALUES (?, ?, NOW())
+            ON DUPLICATE KEY UPDATE completed_at = NOW()`,
+            [userId, moduleId]
+        );
+        await connection.end();
+    } catch (err) {
+        throw new Error(`Error updating module progress: ${err.message}`);
+    }
+};
+
+
+// Updating user progress when completing a quiz
+const updateQuizProgress = async (userId, moduleId, quizId, score) => {
+    try {
+        const connection = await connectToDB();
+        await connection.execute(
+            `INSERT INTO UserProgress (user_id, module_id, quiz_id, score, completed_at)
+            VALUES (?, ?, ?, ?, NOW())
+            ON DUPLICATE KEY UPDATE 
+                score = ?,
+                completed_at = NOW()`,
+            [userId, moduleId, quizId, score, score]
+        );
+        await connection.end();
+    } catch (err) {
+        throw new Error(`Error updating quiz progress: ${err.message}`);
+    }
+};
+
+// Handler for getting user progress
+const handleGetProgress = async (req, res) => {
+    try {
+        const userId = req.user.userId; // From JWT
+        const progress = await getProgress(userId);
+        res.json({ progress });
+    } catch (err) {
+        res.status(500).json({ 
+            message: 'Error retrieving user progress', 
+            error: err.message 
+        });
+    }
+};
+
+// Handler for updating module progress
+const handleUpdateModuleProgress = async (req, res) => {
+    try {
+        const userId = req.user.userId; // From JWT
+        const { moduleId } = req.body;
+
+        if (!moduleId) {
+            return res.status(400).json({ message: 'Module ID is required' });
+        }
+
+        await updateModuleProgress(userId, moduleId);
+        res.json({ message: 'Module progress updated successfully' });
+    } catch (err) {
+        res.status(500).json({ 
+            message: 'Error updating module progress', 
+            error: err.message 
+        });
+    }
+};
+
+// Handler for updating quiz progress
+const handleUpdateQuizProgress = async (req, res) => {
+    try {
+        const userId = req.user.userId; // From JWT
+        const { moduleId, quizId, score } = req.body;
+
+        if (!moduleId || !quizId || score === undefined) {
+            return res.status(400).json({ 
+                message: 'Module ID, Quiz ID, and score are required' 
+            });
+        }
+
+        if (score < 0 || score > 100) {
+            return res.status(400).json({ 
+                message: 'Score must be between 0 and 100' 
+            });
+        }
+
+        await updateQuizProgress(userId, moduleId, quizId, score);
+        res.json({ message: 'Quiz progress updated successfully' });
+    } catch (err) {
+        res.status(500).json({ 
+            message: 'Error updating quiz progress', 
+            error: err.message 
+        });
+    }
+};
+
+
+router.get('/progress', authenticateToken, handleGetProgress);
+router.post('/progress/module', authenticateToken, handleUpdateModuleProgress);
+router.post('/progress/quiz', authenticateToken, handleUpdateQuizProgress);
+
+module.exports = router;

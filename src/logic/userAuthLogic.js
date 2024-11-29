@@ -4,7 +4,7 @@
 
 const { connectToDB } = require('../config/dbconnect')
 const bcrypt = require('bcrypt')
-// const jwt = require('jsonwebtoken') --> We don't need this right now
+const jwt = require('jsonwebtoken') 
 
 // This is a helper function that helps with logins and registration.
 const findUserByUsername = async (username) => {
@@ -32,21 +32,32 @@ const createUser = async (username, email, password) => {
 // User registration request handler.
 const handleRegistration = async (req, res) => {
     try {
-        const {username, email, password} = req.body;
-
-        if (!username || !email || !password){
-            return res.status(400).json({message: 'All fields are required to register'});
+        const { username, email, password } = req.body;
+        
+        if (!username || !email || !password) {
+            return res.status(400).json({ message: 'All fields are required to register' });
         }
-
-        const existingUser = findUserByUsername(username);
-        if (existingUser){
-            return res.status(400).json({message: 'The given username already exists in the database'});
+        
+        const existingUser = await findUserByUsername(username);
+        if (existingUser) {
+            return res.status(400).json({ message: 'The given username already exists in the database' });
         }
-
+        
         await createUser(username, email, password);
-        res.status(201).json({message: 'User was registered successfully! Welcome, ', username})
+        
+        // Generate JWT token after successful registration
+        const token = jwt.sign(
+            { username: username },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+        
+        res.status(201).json({
+            message: 'User was registered successfully! Welcome, ' + username,
+            token: token
+        });
     } catch (err) {
-        res.status(500).json({message: 'Oops! An error occured while registering the user: ', error: err.message})
+        res.status(500).json({ message: 'Oops! An error occurred while registering the user: ', error: err.message });
     }
 };
 
@@ -54,27 +65,36 @@ const handleRegistration = async (req, res) => {
 const handleLogin = async (req, res) => {
     try {
         const { username, password } = req.body;
-        const user = findUserByUsername(username);
-
+        const user = await findUserByUsername(username);
+        
         if (!user) {
             return res.status(401).json({ message: 'Invalid username or password' });
-          }
-      
-          const validPassword = await bcrypt.compare(password, user.password_hash);
-          if (!validPassword) {
-            return res.status(401).json({ message: 'Invalid username or password' });
-          }
-      
-      
-          res.status(200).json({message: 'Login successful' });
-        } catch (error) {
-          res.status(500).json({ message: 'Error during login', error: error.message });
         }
+        
+        const validPassword = await bcrypt.compare(password, user.hashed_password);
+        if (!validPassword) {
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
+        
+        // Generate JWT token after successful login
+        const token = jwt.sign(
+            { username: user.username },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+        
+        res.status(200).json({
+            message: 'Login successful',
+            token: token
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error during login', error: error.message });
+    }
 };
 
-// Have yet to actually implement this. For now we just send a message.
+// Handle logout - now invalidates the token
 const handleLogout = (req, res) => {
-    res.status(200).json({message: 'logged out successfully'});
+    res.status(200).json({ message: 'Logged out successfully' });
 };
 
 module.exports = {
