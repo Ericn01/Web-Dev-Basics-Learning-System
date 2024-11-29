@@ -27,8 +27,7 @@ router.get('/http-demo', (req, res) => {
         ]
       }
     };
-
-    res.json(response);
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -74,7 +73,7 @@ router.post('/http-demo', (req, res) => {
       }
     };
 
-    res.json(response);
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({
       success: false,

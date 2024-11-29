@@ -122,7 +122,7 @@ const handleUpdateProfile = async (req, res) => {
 
 
 module.exports = {
+    handleGetAllUserProfiles,
     handleGetProfile,
-    getProtectedProfile: [authenticateToken, handleGetProfile],
-    updateProtectedProfile: [authenticateToken, handleUpdateProfile]
+    handleUpdateProfile
 };
