@@ -12,12 +12,13 @@ const dbConfig = {
     password: process.env.PASSWORD,
     database: process.env.DATABASE, 
     port: process.env.PORT,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 }
 
 // Returning a database connection
-const connectToDB = async() => {
-    return await mysql.createConnection(dbConfig)
-}
+const connectToDB = mysql.createPool(dbConfig);
 
 
 module.exports = { connectToDB };
