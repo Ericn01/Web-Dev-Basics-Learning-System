@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken')
 // This is a helper function that helps with logins and registration.
 const findUserByEmail = async (email) => {
     const connection = await connectToDB();
-    const [users] = connection.execute(
+    const [users] = await connection.execute(
         'SELECT * FROM Users WHERE email = ?',
         [email]
     );

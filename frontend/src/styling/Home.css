@@ -66,7 +66,7 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 8px;
-  color: var(--text-primary);
+  color: var(--text-primary)
 }
 
 .stat-card p {
@@ -214,31 +214,6 @@
   font-size: 1.5rem;
   color: var(--text-primary);
   margin-bottom: 24px;
-}
-
-.input-group {
-  position: relative;
-  margin-bottom: 16px;
-}
-
-.input-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-secondary);
-  width: 20px;
-  height: 20px;
-}
-
-.input-group input {
-  width: 100%;
-  padding: 12px 12px 12px 40px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  font-size: 1rem;
-  background: var(--input-bg);
-  color: var(--text-primary);
 }
 
 .submit-button {

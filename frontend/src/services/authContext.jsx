@@ -33,17 +33,19 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     console.log(credentials)
     const response = await api.post('/login', credentials);
-    const { token } = response.data.token;
-    localStorage.setItem('authToken', token);
+    const token = response.data.token;
+    localStorage.setItem('token', token);
     localStorage.setItem('userEmail', credentials.email);
+    api.defaults.headers.common['Authorization'] = `Bearer: ${token}`;
     await fetchUserProfile();
   };
 
   const signup = async (userData) => {
     const response = await api.post('/register', userData);
-    const { token } = response.data.token;
-    localStorage.setItem('authToken', token);
+    const token = response.data.token;
+    localStorage.setItem('token', token);
     localStorage.setItem('userEmail', userData.email);
+    api.defaults.headers.common['Authorization'] = `Bearer: ${token}`;
     await fetchUserProfile();
   };
 
