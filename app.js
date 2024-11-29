@@ -7,6 +7,7 @@ const userRoutes = require('./src/routes/userRoutes');
 const learningModuleRoutes = require('./src/routes/learningModulesRoutes');
 const quizzesRoutes = require('./src/routes/quizzesRoutes');
 const FAQRoutes = require('./src/routes/userFAQRoutes');
+const httpDemoRoutes = require('./src/routes/httpDemo');
 
 const app = express();
 app.use(cors()); 
@@ -18,6 +19,7 @@ app.use('/webdev-learning/api', userRoutes);
 app.use('/webdev-learning/api', learningModuleRoutes);
 app.use('/webdev-learning/api', quizzesRoutes);
 app.use('/webdev-learning/api', FAQRoutes);
+app.use('/webdev-learning/api', httpDemoRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

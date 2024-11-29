@@ -8,7 +8,7 @@ import QuizzesPage from './components/QuizzesPage';
 import QuizDetail from './components/QuizDetails';
 import ProfilePage from './components/ProfilePage';
 import ProgressPage from './components/ProgressPage';
-//import HttpDemo from './pages/HttpDemo';
+import HttpDemo from './components//HTTPDemo';
 import FaqComponent from './components/FaqComponent';
 
 const ProtectedRoute = ({ children }) => {
@@ -43,7 +43,7 @@ const App = () => {
                 </ProtectedRoute>
               } 
             />
-            { /* <Route path="/http-demo" element={<HttpDemo />} /> */ }
+            <Route path="/http-demo" element={<HttpDemo />} />
             <Route path="/faq" element={<FaqComponent />} />
           </Routes>
         </Layout>

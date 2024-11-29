@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const response = await api.post('/login', credentials);
-    const { token } = response.data;
+    const { token } = response.data.token;
     localStorage.setItem('token', token);
     api.defaults.headers.common['Authorization'] = token;
     await fetchUserProfile();

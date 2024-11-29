@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Send, ArrowRight, ArrowLeft } from 'lucide-react';
-import './HttpDemo.css';
+import '../styling/HTTPDemo.css';
 import api from '../services/api';
 
 const HttpDemo = () => {

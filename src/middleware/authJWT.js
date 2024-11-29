@@ -1,6 +1,4 @@
-// THIS SECTION CAN BE IGNORED FOR NOW --> Might implement json web tokens later into the project.
-
-/* const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 // Middleware to verify the json web token
 const authenticateToken = (req, res, next) => {
@@ -23,4 +21,3 @@ const authenticateToken = (req, res, next) => {
 
   module.exports = { authenticateToken }
 
-*/
