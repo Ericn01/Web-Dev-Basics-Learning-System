@@ -92,7 +92,7 @@ const updateQuizProgress = async (userId, moduleId, quizId, score) => {
 // Handler for getting user progress
 const handleGetProgress = async (req, res) => {
     try {
-        const userId = req.user.userId; // From JWT
+        const userId = req.user.user_id; // From JWT
         const progress = await getProgress(userId);
         res.json({ progress });
     } catch (err) {
@@ -106,7 +106,7 @@ const handleGetProgress = async (req, res) => {
 // Handler for updating module progress
 const handleUpdateModuleProgress = async (req, res) => {
     try {
-        const userId = req.user.userId; // From JWT
+        const userId = req.user.user_id; 
         const { moduleId } = req.body;
 
         if (!moduleId) {
@@ -126,7 +126,7 @@ const handleUpdateModuleProgress = async (req, res) => {
 // Handler for updating quiz progress
 const handleUpdateQuizProgress = async (req, res) => {
     try {
-        const userId = req.user.userId; // From JWT
+        const userId = req.user.user_id;
         const { moduleId, quizId, score } = req.body;
 
         if (!moduleId || !quizId || score === undefined) {

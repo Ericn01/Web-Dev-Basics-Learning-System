@@ -18,15 +18,15 @@ const isAdmin = async (req, res, next) => {
 const handlePromoteToAdmin = async (req, res) => {
   const connection = await connectToDB();
   try {
-    const { userId } = req.body;
+    const { user_id } = req.body;
     
-    if (!userId) {
+    if (!user_id) {
       return res.status(400).json({ message: 'User ID is required' });
     }
 
     await connection.execute(
       'UPDATE Users SET role = ? WHERE user_id = ?',
-      [ROLES.ADMIN, userId]
+      [ROLES.ADMIN, user_id]
     );
 
     res.json({ message: 'User promoted to admin successfully' });
