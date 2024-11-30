@@ -4,24 +4,35 @@ import '../styling/ProgressPage.css';
 import api from '../services/api';
 
 const ProgressPage = () => {
-  const [progress, setProgress] = useState(null);
+  const [progress, setProgress] = useState({
+    modules_completed: [],
+    quizzes_completed: [],
+    scores: {},
+    recent_activity: []
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        const response = await api.get('/user/progress');
-        setProgress(response.data);
+        const response = await api.get('/progress');
+        setProgress(response.data.progress);
         setLoading(false);
       } catch (err) {
         setError('Failed to load progress data');
         setLoading(false);
       }
     };
-
     fetchProgress();
   }, []);
+
+  const calculateAverageScore = () => {
+    const scores = Object.values(progress.scores);
+    if (scores.length === 0) return 'No scores yet';
+    const average = scores.reduce((a, b) => a + b, 0) / scores.length;
+    return `${average.toFixed(1)}%`;
+};
 
   if (loading) {
     return <div className="loader">Loading progress...</div>;
@@ -70,18 +81,21 @@ const ProgressPage = () => {
 
         <div className="recent-activity">
           <h2>Recent Activity</h2>
-          {progress?.quizzes_completed?.length > 0 ? (
-            <div className="activity-list">
-              {progress.quizzes_completed.map((quizId) => (
-                <div key={quizId} className="activity-item">
-                  <CheckCircle className="activity-icon" />
-                  <div className="activity-info">
-                    <h3>Quiz Completed</h3>
-                    <p>Score: {progress.scores[`quiz_id_${quizId}`]}%</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+          {progress.recent_activity.length > 0 ? (
+              <div className="activity-list">
+                  {progress.recent_activity.map((activity) => (
+                      <div key={`${activity.type}_${activity.id}`} className="activity-item">
+                          <CheckCircle className="activity-icon" />
+                          <div className="activity-info">
+                              <h3>{activity.type === 'quiz' ? 'Quiz' : 'Module'} Completed</h3>
+                              {activity.score && <p>Score: {activity.score}%</p>}
+                              <p className="activity-date">
+                                  {new Date(activity.completed_at).toLocaleDateString()}
+                              </p>
+                          </div>
+                      </div>
+                  ))}
+              </div>
           ) : (
             <p className="no-activity">No recent activity to show</p>
           )}

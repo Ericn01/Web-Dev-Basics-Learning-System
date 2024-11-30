@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       setIsAdmin(response.data.role === 'admin');
     } catch (error) {
+      console.log('An error occured while fetching your profile: ', error)
       localStorage.removeItem('token');
       setIsAuthenticated(false);
       setIsAdmin(false);
@@ -37,7 +38,6 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     const response = await api.post('/login', credentials);
     const { token, role } = response.data;
-    
     localStorage.setItem('token', token);
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
     console.log(userData)
     const response = await api.post('/register', userData);
     const { token } = response.data;
-    
+    console.log(response)
     localStorage.setItem('token', token);
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     

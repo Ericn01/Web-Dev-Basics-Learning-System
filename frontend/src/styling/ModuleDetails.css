@@ -45,7 +45,7 @@
   
   .module-content h2 {
     font-size: 1.5rem;
-    color: #333;
+    color: var(--text-primary);
     margin: 24px 0 16px;
   }
   

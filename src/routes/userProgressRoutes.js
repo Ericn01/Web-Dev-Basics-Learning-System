@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { connectToDB } = require('../config/dbconnect.js')
+const { connectToDB } = require('../config/db')
 const { authenticateToken } = require('../middleware/authJWT');
 
 // Getting progress of logged-in user across modules
 
-const getProgress = async (username) => {
+const getProgress = async () => {
     try {
         const connection = await connectToDB();
-        const [progress] = connection.execute(
+        const [progress] = await connection.execute(
             `SELECT 
                 u.username, 
                 p.progress_id,
@@ -21,8 +21,34 @@ const getProgress = async (username) => {
                 WHERE u.user_id = ?`,
             [user_id] 
         );
+
+        const formattedProgress = {
+            modules_completed: [],
+            quizzes_completed: [],
+            scores: {},
+            recent_activity: []
+        };
+
+        progress.forEach(entry => {
+            if (entry.module_id && !formattedProgress.modules_completed.includes(entry.module_id)) {
+                formattedProgress.modules_completed.push(entry.module_id);
+            }
+            
+            if (entry.quiz_id && !formattedProgress.quizzes_completed.includes(entry.quiz_id)) {
+                formattedProgress.quizzes_completed.push(entry.quiz_id);
+                formattedProgress.scores[`quiz_id_${entry.quiz_id}`] = entry.score;
+                
+                formattedProgress.recent_activity.push({
+                    type: 'quiz',
+                    id: entry.quiz_id,
+                    score: entry.score,
+                    completed_at: entry.completed_at
+                });
+            }
+        });
+
         await connection.end();
-        return progress;
+        return formattedProgress;
     } catch (err) {
         throw new Error(`Error fetching progress: ${err.message}`);    }
 };
