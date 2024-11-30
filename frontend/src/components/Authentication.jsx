@@ -15,26 +15,34 @@ export const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    console.log("Login attempt started"); 
     e.preventDefault();
+    console.log("Login form submit handler triggered");
+    console.log("PreventDefault executed");
+  
     setError(null);
     setIsLoading(true);
-
+  
     try {
-        const response = await login(formData);
-        console.log("Login response:", response); 
-        if (response.role === 'admin') {
-            navigate('/admin/dashboard');
-        } else {
-            navigate('/modules');
-        }
+      console.log("Sending form data:", formData);
+      const response = await login(formData);
+      console.log("Login response received:", response);
+  
+      if (response.role === 'admin') {
+        console.log("Navigating to admin dashboard");
+        navigate('/admin/dashboard');
+      } else {
+        console.log("Navigating to modules");
+        navigate('/modules');
+      }
     } catch (err) {
-        console.error("Login error:", err); 
-        setError(err.response?.data?.message || 'Invalid credentials');
+      console.error("Error in login:", err);
+      setError(err.response?.data?.message || 'Invalid credentials');
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
+      console.log("Loading state reset");
     }
   };
+  
 
   return (
     <div className="auth-container">
@@ -112,7 +120,7 @@ export const Signup = () => {
     setError(null);
     setIsLoading(true);
 
-    console.log("Sending login data:", formData);
+    console.log("Sending registration data:", formData);
 
     // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

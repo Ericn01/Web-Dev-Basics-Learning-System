@@ -10,9 +10,10 @@ CREATE TABLE Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    role VARCHAR(10) DEFAULT 'user',
+    `password` VARCHAR(255) NOT NULL,
+    user_role VARCHAR(10) DEFAULT 'user',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- TABLE 2: Modules - Contains the various learning modules (CSS, HTML) 
@@ -23,6 +24,7 @@ CREATE TABLE Modules (
     content TEXT NOT NULL, -- This section might include HTML formatted text
     banner_image_path VARCHAR(255), -- URL or path to the banner image
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- TABLE 3: Quizzes - Stores quiz data for each module
@@ -30,6 +32,7 @@ CREATE TABLE Quizzes (
     quiz_id INT AUTO_INCREMENT PRIMARY KEY,
     module_id INT NOT NULL,
     title VARCHAR(50) NOT NULL,
+    updated_at TIMESTAMP DEFAULT ON UPDATE CURRENT_TIMESTAMP
     FOREIGN KEY (module_id) REFERENCES Modules(module_id) ON DELETE CASCADE
 );
 
@@ -78,6 +81,16 @@ CREATE TABLE Feedback (
     feedback_text TEXT, 
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE -- delete all feedback for a user if their user_id is deleted
+);
+
+-- TABLE 9: Json Web Tokens - Connects a user to a JSON web token
+
+CREATE TABLE Tokens (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  token VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Now that we've created the tables, we can insert some dummy data into them (mostly for testing purposes, will be removed once we have an actual DB running on the VM)
