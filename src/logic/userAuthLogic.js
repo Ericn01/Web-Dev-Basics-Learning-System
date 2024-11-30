@@ -22,7 +22,7 @@ const findUserByEmail = async (email) => {
   
 
 // Another helper function for the logic to create a new user
-const createUser = async (username, email, password, role = ROLES.USER) => {
+const createUser = async (username, email, password, role = 'user') => {
     const connection = await connectToDB();
     try {
       // Start transaction
@@ -30,7 +30,7 @@ const createUser = async (username, email, password, role = ROLES.USER) => {
       
       const hashedPassword = await bcrypt.hash(password, 10);
       const [result] = await connection.execute(
-        'INSERT INTO Users (username, email, hashed_password, role, is_active) VALUES (?, ?, ?, ?)',
+        'INSERT INTO Users (username, email, hashed_password, role) VALUES (?, ?, ?, ?)',
         [username, email, hashedPassword, role]
       );
       
@@ -85,7 +85,7 @@ const handleLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        if (!email?.trim() || !password?.trim()) {
+        if (!email || !password) {
             return res.status(400).json({ message: 'Email and password are required' });
         }
 
