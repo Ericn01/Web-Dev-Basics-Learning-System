@@ -20,19 +20,13 @@ const ProgressPage = () => {
         setProgress(response.data.progress);
         setLoading(false);
       } catch (err) {
+        console.error("An error occured while loading your progress data: ", err.response.data);
         setError('Failed to load progress data');
         setLoading(false);
       }
     };
     fetchProgress();
   }, []);
-
-  const calculateAverageScore = () => {
-    const scores = Object.values(progress.scores);
-    if (scores.length === 0) return 'No scores yet';
-    const average = scores.reduce((a, b) => a + b, 0) / scores.length;
-    return `${average.toFixed(1)}%`;
-};
 
   if (loading) {
     return <div className="loader">Loading progress...</div>;

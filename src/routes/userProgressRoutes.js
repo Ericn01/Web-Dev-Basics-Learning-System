@@ -5,7 +5,7 @@ const { authenticateToken } = require('../middleware/authJWT');
 
 // Getting progress of logged-in user across modules
 
-const getProgress = async () => {
+const getProgress = async (user_id) => {
     try {
         const connection = await connectToDB();
         const [progress] = await connection.execute(
@@ -55,14 +55,14 @@ const getProgress = async () => {
 
 // Updating user progress when completing a module or quiz
 
-const updateModuleProgress = async (userId, moduleId) => {
+const updateModuleProgress = async (user_id, module_id) => {
     try {
         const connection = await connectToDB();
         await connection.execute(
             `INSERT INTO UserProgress (user_id, module_id, completed_at)
             VALUES (?, ?, NOW())
             ON DUPLICATE KEY UPDATE completed_at = NOW()`,
-            [userId, moduleId]
+            [user_id, module_id]
         );
         await connection.end();
     } catch (err) {
@@ -72,7 +72,7 @@ const updateModuleProgress = async (userId, moduleId) => {
 
 
 // Updating user progress when completing a quiz
-const updateQuizProgress = async (userId, moduleId, quizId, score) => {
+const updateQuizProgress = async (user_id, module_id, quiz_id, score) => {
     try {
         const connection = await connectToDB();
         await connection.execute(
@@ -81,7 +81,7 @@ const updateQuizProgress = async (userId, moduleId, quizId, score) => {
             ON DUPLICATE KEY UPDATE 
                 score = ?,
                 completed_at = NOW()`,
-            [userId, moduleId, quizId, score, score]
+            [user_id, module_id, quiz_id, score, score]
         );
         await connection.end();
     } catch (err) {
@@ -92,8 +92,8 @@ const updateQuizProgress = async (userId, moduleId, quizId, score) => {
 // Handler for getting user progress
 const handleGetProgress = async (req, res) => {
     try {
-        const userId = req.user.user_id; // From JWT
-        const progress = await getProgress(userId);
+        const user_id = req.user.user_id; 
+        const progress = await getProgress(user_id);
         res.json({ progress });
     } catch (err) {
         res.status(500).json({ 
@@ -106,14 +106,14 @@ const handleGetProgress = async (req, res) => {
 // Handler for updating module progress
 const handleUpdateModuleProgress = async (req, res) => {
     try {
-        const userId = req.user.user_id; 
-        const { moduleId } = req.body;
+        const user_id = req.user.user_id; 
+        const { module_id } = req.body;
 
-        if (!moduleId) {
+        if (!module_id) {
             return res.status(400).json({ message: 'Module ID is required' });
         }
 
-        await updateModuleProgress(userId, moduleId);
+        await updateModuleProgress(user_id, module_id);
         res.json({ message: 'Module progress updated successfully' });
     } catch (err) {
         res.status(500).json({ 
@@ -126,10 +126,10 @@ const handleUpdateModuleProgress = async (req, res) => {
 // Handler for updating quiz progress
 const handleUpdateQuizProgress = async (req, res) => {
     try {
-        const userId = req.user.user_id;
-        const { moduleId, quizId, score } = req.body;
+        const user_id = req.user.user_id;
+        const { module_id, quiz_id, score } = req.body;
 
-        if (!moduleId || !quizId || score === undefined) {
+        if (!module_id || !quiz_id || score === undefined) {
             return res.status(400).json({ 
                 message: 'Module ID, Quiz ID, and score are required' 
             });
@@ -141,7 +141,7 @@ const handleUpdateQuizProgress = async (req, res) => {
             });
         }
 
-        await updateQuizProgress(userId, moduleId, quizId, score);
+        await updateQuizProgress(user_id, module_id, quiz_id, score);
         res.json({ message: 'Quiz progress updated successfully' });
     } catch (err) {
         res.status(500).json({ 

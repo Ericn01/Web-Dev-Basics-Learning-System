@@ -20,8 +20,6 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
-console.log("JWT SECRET: ", process.env.JWT_SECRET);
-
 app.use('/webdev-learning/api', userAuthRoutes);
 app.use('/webdev-learning/api', userRoutes);
 app.use('/webdev-learning/api', learningModuleRoutes);
