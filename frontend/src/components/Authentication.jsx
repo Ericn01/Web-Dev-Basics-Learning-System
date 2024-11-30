@@ -15,21 +15,24 @@ export const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
+    console.log("Login attempt started"); 
     e.preventDefault();
     setError(null);
     setIsLoading(true);
 
     try {
-      const response = await login(formData);
-      if (response.role === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/modules');
-      }
+        const response = await login(formData);
+        console.log("Login response:", response); 
+        if (response.role === 'admin') {
+            navigate('/admin/dashboard');
+        } else {
+            navigate('/modules');
+        }
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid credentials');
+        console.error("Login error:", err); 
+        setError(err.response?.data?.message || 'Invalid credentials');
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
   };
 
@@ -108,6 +111,8 @@ export const Signup = () => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
+
+    console.log("Sending login data:", formData);
 
     // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

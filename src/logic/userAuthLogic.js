@@ -14,8 +14,13 @@ const findUserByEmail = async (email) => {
         'SELECT * FROM Users WHERE email = ?',
         [email]
       );
-      return users[0];
-    } finally {
+      console.log("Found users:", users);
+      return users[0]; 
+    } catch(error){
+        console.error("Error finding user:", error);
+        throw error;
+    } 
+    finally {
       await connection.end();
     }
   };
@@ -25,24 +30,19 @@ const findUserByEmail = async (email) => {
 const createUser = async (username, email, password, role = 'user') => {
     const connection = await connectToDB();
     try {
-      // Start transaction
-      await connection.beginTransaction();
-      
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const [result] = await connection.execute(
-        'INSERT INTO Users (username, email, password_hash, role) VALUES (?, ?, ?, ?)',
-        [username, email, hashedPassword, role]
-      );
-      
-      await connection.commit();
-      return result.insertId;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const [result] = await connection.execute(
+            'INSERT INTO Users (username, email, hashed_password, role, is_active) VALUES (?, ?, ?, ?, TRUE)',
+            [username, email, hashedPassword, role]
+        );
+        return result.insertId;
     } catch (error) {
-      await connection.rollback();
-      throw error;
+        console.error("An error occured while attempting to create the new user: ", error)
+        throw error;
     } finally {
-      await connection.end();
+        await connection.end();
     }
-  };
+};
 
 // User registration request handler.
 const handleRegistration = async (req, res) => {
@@ -85,6 +85,9 @@ const handleLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        console.log("Login attempt for email:", email); 
+        console.log("User found:", user ? "yes" : "no");
+
         if (!email || !password) {
             return res.status(400).json({ message: 'Email and password are required' });
         }
@@ -114,6 +117,7 @@ const handleLogin = async (req, res) => {
             token
         });
     } catch (error) {
+        console.error("Login error:", error);
         res.status(500).json({ message: 'Error during login', error: error.message });
     }
 };
