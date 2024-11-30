@@ -28,7 +28,7 @@ const handleRegistration = async (req, res) => {
   
       // Check for existing user
       const [existingUser] = await connect.query(
-        'SELECT * FROM users WHERE email = ? OR username = ?',
+        'SELECT * FROM Users WHERE email = ? OR username = ?',
         [email, username]
       );
   
@@ -41,7 +41,7 @@ const handleRegistration = async (req, res) => {
   
       // Create user
       const [result] = await connect.query(
-        'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
+        'INSERT INTO Users (username, email, password) VALUES (?, ?, ?)',
         [username, email, hashedPassword]
       );
   
@@ -76,7 +76,7 @@ const handleLogin = async (req, res) => {
     
         // Find user
         const [users] = await connect.query(
-        'SELECT * FROM users WHERE email = ?',
+        'SELECT * FROM Users WHERE email = ?',
         [email]
         );
     
@@ -98,7 +98,7 @@ const handleLogin = async (req, res) => {
     
         // Store token
         await connect.query(
-            'INSERT INTO tokens (user_id, token) VALUES (?, ?)',
+            'INSERT INTO Tokens (user_id, token) VALUES (?, ?)',
             [user.id, token]
         );
     
@@ -117,7 +117,7 @@ const handleLogout = async (req, res) => {
     const connect = await connectToDB();
     try {
       const token = req.headers.authorization.split(' ')[1];
-      await connect.query('DELETE FROM tokens WHERE token = ?', [token]);
+      await connect.query('DELETE FROM Tokens WHERE token = ?', [token]);
       res.json({ message: 'Logged out successfully' });
     } catch (error) {
       console.error(error);
