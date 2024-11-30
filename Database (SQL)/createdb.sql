@@ -12,19 +12,19 @@ CREATE TABLE Users (
     email VARCHAR(100) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     user_role VARCHAR(10) DEFAULT 'user',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    updated_at TIMESTAMP DEFAULT ON UPDATE CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT NULL
 );
 
--- TABLE 2: Modules - Contains the various learning modules (CSS, HTML) 
+-- TABLE 4: Modules - Stores information for the teaching modules
 CREATE TABLE Modules (
     module_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(50) NOT NULL,
     module_description VARCHAR(255),
-    content TEXT NOT NULL, -- This section might include HTML formatted text
-    banner_image_path VARCHAR(255), -- URL or path to the banner image
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    updated_at TIMESTAMP DEFAULT ON UPDATE CURRENT_TIMESTAMP
+    content TEXT NOT NULL,
+    banner_image_path VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT NULL
 );
 
 -- TABLE 3: Quizzes - Stores quiz data for each module
@@ -32,7 +32,6 @@ CREATE TABLE Quizzes (
     quiz_id INT AUTO_INCREMENT PRIMARY KEY,
     module_id INT NOT NULL,
     title VARCHAR(50) NOT NULL,
-    updated_at TIMESTAMP DEFAULT ON UPDATE CURRENT_TIMESTAMP
     FOREIGN KEY (module_id) REFERENCES Modules(module_id) ON DELETE CASCADE
 );
 
@@ -90,7 +89,7 @@ CREATE TABLE Tokens (
   user_id INT NOT NULL,
   token VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
 -- Now that we've created the tables, we can insert some dummy data into them (mostly for testing purposes, will be removed once we have an actual DB running on the VM)
@@ -839,13 +838,69 @@ INSERT INTO Quizzes (module_id, title) VALUES
 (6, 'HTTP GET Quiz'),
 (6, 'HTTP POST Quiz');
 
--- Questions for Quiz 1: HTML Fundamentals
 INSERT INTO Questions (quiz_id, question_text, correct_answer) VALUES
+
+-- Questions for Quiz 1: Basic HTML
 (1, 'What does HTML stand for?', 'HyperText Markup Language'),
 (1, 'Which tag is used to define the root element of an HTML document?', '<html>'),
 (1, 'What is the correct file extension for HTML files?', '.html'),
 (1, 'Which tag contains metadata about the HTML document?', '<head>'),
-(1, 'Which tag contains the visible content of a webpage?', '<body>');
+(1, 'Which tag contains the visible content of a webpage?', '<body>'),
+
+-- Questions for Quiz 2: HTML Elements and Syntax
+(2, 'Which HTML element is used to define the most important heading?', '<h1>'),
+(2, 'What is the correct HTML element for inserting a line break?', '<br>'),
+(2, 'Which attribute is used to provide alternative text for an image?', 'alt'),
+(2, 'Which HTML element is used to create a hyperlink?', '<a>'),
+(2, 'How do you create a paragraph in HTML?', '<p>'),
+
+-- Questions for Quiz 3: Semantic HTML
+(3, 'Which semantic element should be used to mark up the main navigation menu of a website?', '<nav>'),
+(3, 'What is the most appropriate semantic element for a blog post or news article?', '<article>'),
+(3, 'Which semantic element should be used for content that is related but not essential to the main content?', '<aside>'),
+(3, 'What semantic element should wrap the main content area of your webpage?', '<main>'),
+(3, 'Which semantic element should be used to group a set of related content with its own heading?', '<section>'),
+
+-- Questions for Quiz 4: HTML Forms Basics
+(4, 'Which HTML element is used to create a form?', '<form>'),
+(4, 'What attribute specifies where form data should be sent?', 'action'),
+(4, 'Which input type creates a password field that masks text?', 'password'),
+(4, 'What attribute makes a form field required?', 'required'),
+(4, 'Which button type clears all form fields to their default value?', 'reset'),
+
+(5, 'Which input type is used for multiple-choice selections where multiple answers are allowed?', 'checkbox'),
+(5, 'What element creates a dropdown selection menu?', '<select>'),
+(5, 'Which element is used for multi-line text input?', '<textarea>'),
+(5, 'What input type should be used for email addresses?', 'email'),
+(5, 'Which attribute provides a short hint describing the expected value of an input field?', 'placeholder'),
+
+-- Quiz 6: HTML Tables
+(6, 'Which HTML tag defines a table header cell?', '<th>'),
+(6, 'What attribute is used to make a cell span multiple columns?', 'colspan'),
+(6, 'Which tag is used to group header content in a table?', '<thead>'),
+(6, 'What is the correct tag for creating a table row?', '<tr>'),
+(6, 'Which attribute should be used on table headers to specify whether it is a header for a row or column?', 'scope'),
+
+-- Questions for Quiz 7: CSS Basics Quiz */
+(7, 'Which symbol is used to specify a class selector in CSS?', '.'),
+(7, 'What property is used to change the text color in CSS?', 'color'),
+(7, 'Which CSS property controls the space outside an element border?', 'margin'),
+(7, 'What value of the display property makes an element a flex container?', 'flex'),
+(7, 'Which property is used to change the font size in CSS?', 'font-size'),
+
+-- Questions for Quiz 8: HTTP GET
+(8, 'What is the main purpose of HTTP GET method?', 'To retrieve data from a specified resource'),
+(8, 'Which of the following is true about data sent using GET method?', 'Data is visible in the URL'),
+(8, 'What is the maximum length of a URL in modern browsers?', '2048 characters'),
+(8, 'Are GET requests cached by browsers?', 'Yes'),
+(8, 'Can GET requests be bookmarked?', 'Yes'),
+
+-- Questions for Quiz 9: HTTP POST
+(9, 'What is the primary purpose of HTTP POST method?', 'To submit data to be processed to a specified resource'),
+(9, 'How is data sent in POST requests?', 'In the request body'),
+(9, 'Are POST requests cached?', 'No'),
+(9, 'Which HTTP status code typically indicates a successful POST request?', '201 Created'),
+(9, 'Can POST requests be bookmarked?', 'No');
 
 -- Options for Quiz 1 questions
 INSERT INTO Options (question_id, option_text) VALUES
@@ -879,14 +934,6 @@ INSERT INTO Options (question_id, option_text) VALUES
 (5, '<main>'),
 (5, '<page>');
 
--- Questions for Quiz 2: HTML Elements and Syntax
-INSERT INTO Questions (quiz_id, question_text, correct_answer) VALUES
-(2, 'Which HTML element is used to define the most important heading?', '<h1>'),
-(2, 'What is the correct HTML element for inserting a line break?', '<br>'),
-(2, 'Which attribute is used to provide alternative text for an image?', 'alt'),
-(2, 'Which HTML element is used to create a hyperlink?', '<a>'),
-(2, 'How do you create a paragraph in HTML?', '<p>');
-
 -- OPTIONS FOR QUIZ 2 QUESTIONS
 INSERT INTO Options (question_id, option_text) VALUES
 -- Options for "Which HTML element is used to define the most important heading?"
@@ -919,13 +966,6 @@ INSERT INTO Options (question_id, option_text) VALUES
 (10, '<text>'),
 (10, '<para>');
 
--- Add questions
-INSERT INTO Questions (quiz_id, question_text, correct_answer) VALUES 
-(3, 'Which semantic element should be used to mark up the main navigation menu of a website?', '<nav>'),
-(3, 'What is the most appropriate semantic element for a blog post or news article?', '<article>'),
-(3, 'Which semantic element should be used for content that is related but not essential to the main content?', '<aside>'),
-(3, 'What semantic element should wrap the main content area of your webpage?', '<main>'),
-(3, 'Which semantic element should be used to group a set of related content with its own heading?', '<section>');
 
 -- Add options for each question
 INSERT INTO Options (question_id, option_text) VALUES 
@@ -960,14 +1000,6 @@ INSERT INTO Options (question_id, option_text) VALUES
 (15, '<content>');
 
 
--- Questions for Quiz 4: HTML Forms Basics
-INSERT INTO Questions (quiz_id, question_text, correct_answer) VALUES 
-(4, 'Which HTML element is used to create a form?', '<form>'),
-(4, 'What attribute specifies where form data should be sent?', 'action'),
-(4, 'Which input type creates a password field that masks text?', 'password'),
-(4, 'What attribute makes a form field required?', 'required'),
-(4, 'Which button type clears all form fields to their default value?', 'reset');
-
 -- Options for Quiz 1
 INSERT INTO Options (question_id, option_text) VALUES 
 -- Form element options
@@ -1000,15 +1032,7 @@ INSERT INTO Options (question_id, option_text) VALUES
 (20, 'default'),
 (20, 'refresh');
 
--- Questions for Quiz 2: Form Elements and Attributes
-INSERT INTO Questions (quiz_id, question_text, correct_answer) VALUES 
-(5, 'Which input type is used for multiple-choice selections where multiple answers are allowed?', 'checkbox'),
-(5, 'What element creates a dropdown selection menu?', '<select>'),
-(5, 'Which element is used for multi-line text input?', '<textarea>'),
-(5, 'What input type should be used for email addresses?', 'email'),
-(5, 'Which attribute provides a short hint describing the expected value of an input field?', 'placeholder');
 
--- Options for Quiz 2
 INSERT INTO Options (question_id, option_text) VALUES 
 -- Checkbox options
 (21, 'checkbox'),
@@ -1040,17 +1064,6 @@ INSERT INTO Options (question_id, option_text) VALUES
 (25, 'preview'),
 (25, 'default');
 
-
-/* HTML Tables Quiz */
-/* Quiz questions to test understanding of table structure, elements, and best practices */
-
-INSERT INTO Questions (quiz_id, question_text, correct_answer) VALUES
-(6, 'Which HTML tag defines a table header cell?', '<th>'),
-(6, 'What attribute is used to make a cell span multiple columns?', 'colspan'),
-(6, 'Which tag is used to group header content in a table?', '<thead>'),
-(6, 'What is the correct tag for creating a table row?', '<tr>'),
-(6, 'Which attribute should be used on table headers to specify whether it is a header for a row or column?', 'scope');
-
 INSERT INTO Options (question_id, option_text) VALUES
 (26, '<th>'),
 (26, '<td>'),
@@ -1077,118 +1090,89 @@ INSERT INTO Options (question_id, option_text) VALUES
 (30, 'header'),
 (30, 'format');
 
-/* CSS Basics Quiz */
-/* Quiz questions covering CSS selectors, properties, and application methods */
-
-INSERT INTO Questions (quiz_id, question_text, correct_answer) VALUES
-(7, 'Which symbol is used to specify a class selector in CSS?', '.'),
-(7, 'What property is used to change the text color in CSS?', 'color'),
-(7, 'Which CSS property controls the space outside an element border?', 'margin'),
-(7, 'What value of the display property makes an element a flex container?', 'flex'),
-(7, 'Which property is used to change the font size in CSS?', 'font-size');
-
 INSERT INTO Options (question_id, option_text) VALUES
 (31, '.'),
-(32, '#'),
-(33, '@'),
-(34, '*'),
+(31, '#'),
+(31, '@'),
+(31, '*'),
 
-(35, 'color'),
-(35, 'text-color'),
-(35, 'font-color'),
-(35, 'text-style'),
+(32, 'color'),
+(32, 'text-color'),
+(32, 'font-color'),
+(32, 'text-style'),
 
-(36, 'margin'),
-(36, 'padding'),
-(36, 'spacing'),
-(36, 'border-space'),
+(33, 'margin'),
+(33, 'padding'),
+(33, 'spacing'),
+(33, 'border-space'),
 
-(37, 'flex'),
-(37, 'flexbox'),
-(37, 'flexible'),
-(37, 'flex-box'),
+(34, 'flex'),
+(34, 'flexbox'),
+(34, 'flexible'),
+(34, 'flex-box'),
 
-(38, 'font-size'),
-(38, 'text-size'),
-(38, 'size'),
-(38, 'text-font-size');
-
-/* HTTP Methods Quiz */
-/* Quiz questions about GET and POST methods, their characteristics and usage */
-
--- Insert questions for HTTP GET Quiz (quiz_id = 1)
-INSERT INTO Questions (quiz_id, question_text, correct_answer) VALUES 
-(8, 'What is the main purpose of HTTP GET method?', 'To retrieve data from a specified resource'),
-(8, 'Which of the following is true about data sent using GET method?', 'Data is visible in the URL'),
-(8, 'What is the maximum length of a URL in modern browsers?', '2048 characters'),
-(8, 'Are GET requests cached by browsers?', 'Yes'),
-(8, 'Can GET requests be bookmarked?', 'Yes');
+(35, 'font-size'),
+(35, 'text-size'),
+(35, 'size'),
+(35, 'text-font-size');
 
 -- Insert options for HTTP GET Quiz questions
 INSERT INTO Options (question_id, option_text) VALUES
-(39, 'To retrieve data from a specified resource'),
-(39, 'To submit data to be processed to a specified resource'),
-(39, 'To update a resource'),
-(39, 'To delete a resource'),
+(36, 'To retrieve data from a specified resource'),
+(36, 'To submit data to be processed to a specified resource'),
+(36, 'To update a resource'),
+(36, 'To delete a resource'),
 
-(40, 'Data is visible in the URL'),
-(40, 'Data is hidden from the URL'),
-(40, 'Data is encrypted in transit'),
-(40, 'Data can only be sent as JSON'),
+(37, 'Data is visible in the URL'),
+(37, 'Data is hidden from the URL'),
+(37, 'Data is encrypted in transit'),
+(37, 'Data can only be sent as JSON'),
 
-(41, '2048 characters'),
-(41, '1024 characters'),
-(41, 'Unlimited length'),
-(41, '512 characters'),
+(38, '2048 characters'),
+(38, '1024 characters'),
+(38, 'Unlimited length'),
+(38, '512 characters'),
 
-(42, 'Yes'),
-(42, 'No'),
-(42, 'Only if specified in headers'),
-(42, 'Only in private browsing mode'),
+(39, 'Yes'),
+(39, 'No'),
+(39, 'Only if specified in headers'),
+(39, 'Only in private browsing mode'),
 
-(43, 'Yes'),
-(43, 'No'),
-(43, 'Only if encoded properly'),
-(43, 'Only in modern browsers');
-
--- Insert questions for HTTP POST Quiz (quiz_id = 2)
-INSERT INTO Questions (quiz_id, question_text, correct_answer) VALUES 
-(9, 'What is the primary purpose of HTTP POST method?', 'To submit data to be processed to a specified resource'),
-(9, 'How is data sent in POST requests?', 'In the request body'),
-(9, 'Are POST requests cached?', 'No'),
-(9, 'Which HTTP status code typically indicates a successful POST request?', '201 Created'),
-(9, 'Can POST requests be bookmarked?', 'No');
+(40, 'Yes'),
+(40, 'No'),
+(40, 'Only if encoded properly'),
+(40, 'Only in modern browsers');
 
 -- Insert options for HTTP POST Quiz questions
 INSERT INTO Options (question_id, option_text) VALUES
-(44, 'To submit data to be processed to a specified resource'),
-(44, 'To retrieve data from a specified resource'),
-(44, 'To delete a resource'),
-(44, 'To check if a resource exists'),
+(41, 'To submit data to be processed to a specified resource'),
+(41, 'To retrieve data from a specified resource'),
+(41, 'To delete a resource'),
+(41, 'To check if a resource exists'),
 
-(45, 'In the request body'),
-(45, 'In the URL parameters'),
-(45, 'In the request headers only'),
-(45, 'In cookies only'),
+(42, 'In the request body'),
+(42, 'In the URL parameters'),
+(42, 'In the request headers only'),
+(42, 'In cookies only'),
 
-(46, 'No'),
-(46, 'Yes'),
-(46, 'Only if specified in headers'),
-(46, 'Depends on the browser'),
+(43, 'No'),
+(43, 'Yes'),
+(43, 'Only if specified in headers'),
+(43, 'Depends on the browser'),
 
-(47, '201 Created'),
-(47, '200 OK'),
-(47, '204 No Content'),
-(47, '202 Accepted'),
+(44, '201 Created'),
+(44, '200 OK'),
+(44, '204 No Content'),
+(44, '202 Accepted'),
 
-(48, 'No'),
-(48, 'Yes'),
-(48, 'Only if data is encoded'),
-(48, 'Only with modern browsers');
+(45, 'No'),
+(45, 'Yes'),
+(45, 'Only if data is encoded'),
+(45, 'Only with modern browsers');
 
 
 -- 1) Create mock users and some basic user progress values
-INSERT INTO Users (username, email, password_hash) VALUES
+INSERT INTO Users (username, email, `password`) VALUES
 ('sarah_dev', 'sarah.dev@gmail.com', 'hashed_password_123'),
 ('code_master', 'master.coder@outlook.com', 'hashed_password_456'),
 ('web_learner', 'learning.web@yahoo.com', 'hashed_password_789'),

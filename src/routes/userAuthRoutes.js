@@ -27,7 +27,7 @@ const handleRegistration = async (req, res) => {
       }
   
       // Check for existing user
-      const [existingUser] = await connect.query(
+      const [existingUser] = await connect.execute(
         'SELECT * FROM Users WHERE email = ? OR username = ?',
         [email, username]
       );
@@ -40,16 +40,17 @@ const handleRegistration = async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, 10);
   
       // Create user
-      const [result] = await connect.query(
+      const [result] = await connect.execute(
         'INSERT INTO Users (username, email, password) VALUES (?, ?, ?)',
         [username, email, hashedPassword]
       );
+
   
       // Generate token
       const token = jwt.sign({ userId: result.insertId }, process.env.JWT_SECRET, { expiresIn: '24h' });
   
       // Store token
-      await connect.query(
+      await connect.execute(
         'INSERT INTO tokens (user_id, token) VALUES (?, ?)',
         [result.insertId, token]
       );
@@ -71,17 +72,17 @@ const handleLogin = async (req, res) => {
     try {
         // Input validation
         if (!email || !password) {
-        return res.status(400).json({ message: 'All fields are required' });
+            return res.status(400).json({ message: 'All fields are required' });
         }
     
         // Find user
-        const [users] = await connect.query(
+        const [users] = await connect.execute(
         'SELECT * FROM Users WHERE email = ?',
         [email]
         );
     
         if (users.length === 0) {
-        return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'There are no registered users with the specified email' });
         }
     
         const user = users[0];
@@ -94,12 +95,12 @@ const handleLogin = async (req, res) => {
         }
     
         // Generate token
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+        const token = jwt.sign({ userId: user.user_id }, process.env.JWT_SECRET, { expiresIn: '24h' });
     
         // Store token
-        await connect.query(
+        await connect.execute(
             'INSERT INTO Tokens (user_id, token) VALUES (?, ?)',
-            [user.id, token]
+            [user.user_id, token]
         );
     
         res.json({
@@ -117,7 +118,7 @@ const handleLogout = async (req, res) => {
     const connect = await connectToDB();
     try {
       const token = req.headers.authorization.split(' ')[1];
-      await connect.query('DELETE FROM Tokens WHERE token = ?', [token]);
+      await connect.execute('DELETE FROM Tokens WHERE token = ?', [token]);
       res.json({ message: 'Logged out successfully' });
     } catch (error) {
       console.error(error);
