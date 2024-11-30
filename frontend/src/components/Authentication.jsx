@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, User, Github, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../services/authContext';
-import api from '../services/api';
 import '../styling/Authentication.css';
 
 export const Login = () => {
@@ -21,10 +20,14 @@ export const Login = () => {
     setIsLoading(true);
 
     try {
-      await login(formData);
-      navigate('/modules');
+      const response = await login(formData);
+      if (response.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/modules');
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to log in');
+      setError(err.response?.data?.message || 'Invalid credentials');
     } finally {
       setIsLoading(false);
     }
@@ -95,26 +98,32 @@ export const Signup = () => {
   });
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  
+  const validatePassword = (password) => {
+    return password.length >= 5;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
 
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Invalid email format');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const response = await api.post('/register', formData);
-      localStorage.setItem('authToken', response.data.token);
-      localStorage.setItem('userEmail', formData.email);
+      await signup(formData);
       navigate('/modules');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create account');
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const validatePassword = (password) => {
-    return password.length >= 5;
   };
 
   return (
@@ -188,4 +197,22 @@ export const Signup = () => {
       </div>
     </div>
   );
+};
+
+
+export const AdminRoute = ({ children }) => {
+  const { isAuthenticated, isAdmin, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && (!isAuthenticated || !isAdmin)) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, isAdmin, loading, navigate]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return isAuthenticated && isAdmin ? children : null;
 };

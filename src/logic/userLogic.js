@@ -31,18 +31,23 @@ const handleGetAllUserProfiles = async (req, res) => {
 
 // Retrieve the information from a given user in the database
 const getUserProfile = async (userId) => {
-  const connection = await connectToDB();
-  const [users] = await connection.execute(
-      'SELECT username, email FROM Users WHERE user_id = ?',
-      [userId]
-  );
-  const [progress] = await connection.execute(
-      'SELECT * FROM UserProgress WHERE user_id = ?',
-      [userId]
-  );
-  await connection.end();
-  return { user: users[0], progress };
-};
+    const connection = await connectToDB();
+    try {
+      const [users] = await connection.execute(
+        'SELECT username, email, role FROM Users WHERE user_id = ?',
+        [userId]
+      );
+      
+      const [progress] = await connection.execute(
+        'SELECT * FROM UserProgress WHERE user_id = ?',
+        [userId]
+      );
+  
+      return { user: users[0], progress };
+    } finally {
+      await connection.end();
+    }
+  };
 
   
 const updateUserProfile = async (userId, updates) => {

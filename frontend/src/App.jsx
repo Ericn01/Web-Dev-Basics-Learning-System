@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './services/authContext';
-import { Login, Signup } from './components/Authentication';
+import { Login, Signup, AdminRoute } from './components/Authentication';
 import Layout from './components/Layout';
 import HomePage from './components/HomePage';
 import ModulesPage from './components/ModulesPage';
@@ -11,6 +11,7 @@ import ProfilePage from './components/ProfilePage';
 import ProgressPage from './components/ProgressPage';
 import HttpDemo from './components//HTTPDemo';
 import FaqComponent from './components/FaqComponent';
+import AdminDashboard from './components/AdminDashboard';
 import { ThemeProvider } from './services/themeContext';
 
 import './styling/theme.css';
@@ -27,6 +28,11 @@ const App = () => {
         <Router>
           <Layout>
             <Routes>
+              <Route path="/admin/*" element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              } />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/" element={<HomePage />} />
