@@ -41,14 +41,20 @@ const QuizDetail = () => {
   const handleSubmit = async () => {
     try {
       const response = await api.post(`/quizzes/${id}/submit`, {
-        user_id: user.id,
         answers: Object.entries(answers).map(([questionId, answer]) => ({
           question_id: parseInt(questionId),
           answer
         }))
       });
-      setScore(response.data.score);
-      setSubmitted(true);
+  
+      if (response.data.success) {
+        setScore(response.data.data.score);
+        setTotalQuestions(response.data.data.totalQuestions);
+        setCorrectAnswers(response.data.data.correctAnswers);
+        setSubmitted(true);
+      } else {
+        setError(response.data.message || 'Failed to submit quiz');
+      }
     } catch (err) {
       setError('Failed to submit quiz. Please try again.');
       console.error(err);
