@@ -7,6 +7,7 @@ const userRoutes = require('./src/routes/userRoutes');
 const learningModuleRoutes = require('./src/routes/learningModulesRoutes');
 const quizzesRoutes = require('./src/routes/quizzesRoutes');
 const FAQRoutes = require('./src/routes/userFAQRoutes');
+const progressRoutes = require('./src/routes/userProgressRoutes');
 const httpDemoRoutes = require('./src/routes/httpDemo');
 
 const app = express();
@@ -19,11 +20,14 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
+console.log("JWT SECRET: ", process.env.JWT_SECRET);
+
 app.use('/webdev-learning/api', userAuthRoutes);
 app.use('/webdev-learning/api', userRoutes);
 app.use('/webdev-learning/api', learningModuleRoutes);
 app.use('/webdev-learning/api', quizzesRoutes);
 app.use('/webdev-learning/api', FAQRoutes);
+app.use('/webdev-learning/api', progressRoutes);
 app.use('/webdev-learning/api', httpDemoRoutes);
 
 const PORT = process.env.PORT || 3000;

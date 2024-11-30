@@ -34,7 +34,7 @@ const getUserProfile = async (userId) => {
     const connection = await connectToDB();
     try {
       const [users] = await connection.execute(
-        'SELECT username, email, role FROM Users WHERE user_id = ?',
+        'SELECT username, email, user_role FROM Users WHERE user_id = ?',
         [userId]
       );
       
@@ -91,20 +91,23 @@ const updateUserProfile = async (userId, updates) => {
 // Request logic to retrieve a user's profile information (along with their progress)
 const handleGetProfile = async (req, res) => {
   try {
-      // req.user is populated by the JWT middleware
-      const userId = req.user.userId; // Make sure this matches the payload structure in your JWT
+      
+      const userId = req.user.user_id; 
       const { user, progress } = await getUserProfile(userId);
       
       if (!user) {
+	  console.log('No user found for user_id:', userId)    
           return res.status(404).json({ message: 'User not found' });
       }
       
       res.json({
           username: user.username,
           email: user.email,
-          progress
+          role: user.user_role,
+	  progress
       });
   } catch (err) {
+      console.log("Profile retrieval error:", err);
       res.status(500).json({ message: 'Error retrieving profile', error: err.message });
   }
 };
@@ -112,7 +115,7 @@ const handleGetProfile = async (req, res) => {
 const handleUpdateProfile = async (req, res) => {
   try {
       const { username, email } = req.body;
-      const userId = req.user.userId; // From JWT middleware
+      const userId = req.user.user_id; 
       
       if (!username && !email) {
           return res.status(400).json({ message: 'No update data provided' });

@@ -47,11 +47,11 @@ const handleRegistration = async (req, res) => {
 
   
       // Generate token
-      const token = jwt.sign({ userId: result.insertId }, process.env.JWT_SECRET, { expiresIn: '24h' });
+      const token = jwt.sign({ user_id: result.insertId }, process.env.JWT_SECRET, { expiresIn: '24h' });
   
       // Store token
       await connect.execute(
-        'INSERT INTO tokens (user_id, token) VALUES (?, ?)',
+        'INSERT INTO Tokens (user_id, token) VALUES (?, ?)',
         [result.insertId, token]
       );
   
@@ -95,7 +95,7 @@ const handleLogin = async (req, res) => {
         }
     
         // Generate token
-        const token = jwt.sign({ userId: user.user_id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+        const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET, { expiresIn: '24h' });
     
         // Store token
         await connect.execute(
@@ -105,7 +105,7 @@ const handleLogin = async (req, res) => {
     
         res.json({
             token,
-            role: user.role
+            role: user.user_role
         });
     } catch (error) {
         console.error(error);

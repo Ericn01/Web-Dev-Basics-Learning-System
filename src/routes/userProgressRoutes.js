@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { connectToDB } = require('../config/db')
+const { connectToDB } = require('../config/dbconnect.js')
 const { authenticateToken } = require('../middleware/authJWT');
 
 // Getting progress of logged-in user across modules
