@@ -91,6 +91,7 @@ export const Login = () => {
 
 export const Signup = () => {
   const navigate = useNavigate();
+  const { signup } = useAuth()
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -111,7 +112,7 @@ export const Signup = () => {
     // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setError('Invalid email format');
+      setError('Please enter a valid email address');
       setIsLoading(false);
       return;
     }

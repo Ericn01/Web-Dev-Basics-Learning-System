@@ -30,7 +30,7 @@ const createUser = async (username, email, password, role = 'user') => {
       
       const hashedPassword = await bcrypt.hash(password, 10);
       const [result] = await connection.execute(
-        'INSERT INTO Users (username, email, hashed_password, role) VALUES (?, ?, ?, ?)',
+        'INSERT INTO Users (username, email, password_hash, role) VALUES (?, ?, ?, ?)',
         [username, email, hashedPassword, role]
       );
       
@@ -94,7 +94,7 @@ const handleLogin = async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
         
-        const validPassword = await bcrypt.compare(password, user.hashed_password);
+        const validPassword = await bcrypt.compare(password, user.password_hash);
         if (!validPassword) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }

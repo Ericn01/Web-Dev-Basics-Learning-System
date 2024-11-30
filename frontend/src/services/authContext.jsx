@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }) => {
 
 
   const signup = async (userData) => {
+    console.log(userData)
     const response = await api.post('/register', userData);
     const { token } = response.data;
     
