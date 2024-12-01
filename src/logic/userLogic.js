@@ -2,21 +2,20 @@
  * This file contains the logic for creating users, updating user info, and retrieving a user's information
  */
 const { connectToDB } = require('../config/dbconnect')
-const { authenticateToken } = require('../middleware/authJWT'); 
 
 // Testing function to retrieve all user profiles
 const getAllUserProfiles = async() => {
     const connection = await connectToDB();
-    const [userProfiles] = await connection.query(
+    const [userProfiles] = await connection.execute(
         `SELECT Users.user_id, Users.username, Users.email, UserProgress.quiz_id, UserProgress.score
         FROM Users 
-        LEFT JOIN UserProgress ON Users.user_id = UserProgress.user_id`
+        LEFT JOIN UserProgress ON Users.user_id = UserProgress.user_id
+        GROUP BY Users.user_id
+        ORDER BY ID ASC`
     );
     await connection.end();
     return {userProfiles: userProfiles};
 }
-
-// Test route handler
 
 const handleGetAllUserProfiles = async (req, res) => {
     try {
@@ -114,14 +113,14 @@ const handleGetProfile = async (req, res) => {
 // Request handler to update a user's profile
 const handleUpdateProfile = async (req, res) => {
   try {
-      const { username, email } = req.body;
+      const { username, email, user_role } = req.body;
       const userId = req.user.user_id; 
       
       if (!username && !email) {
           return res.status(400).json({ message: 'No update data provided' });
       }
 
-      await updateUserProfile(userId, { username, email });
+      await updateUserProfile(userId, { username, email, user_role });
       res.json({ message: 'Profile updated successfully' });
   } catch (err) {
       res.status(500).json({ message: 'Error updating profile', error: err.message });

@@ -21,17 +21,18 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await api.get('/user/profile');
-      setUser(response.data);
-      setIsAuthenticated(true);
-      setIsAdmin(response.data.role === 'admin');
+        console.log('Fetching user profile...');
+        const response = await api.get('/user/profile');
+        setUser(response.data);
+        setIsAuthenticated(true);
+        setIsAdmin(response.data.role === 'admin');
     } catch (error) {
-      console.log('An error occured while fetching your profile: ', error)
-      localStorage.removeItem('token');
-      setIsAuthenticated(false);
-      setIsAdmin(false);
+        console.log('An error occured while fetching your profile: ', error)
+        localStorage.removeItem('token');
+        setIsAuthenticated(false);
+        setIsAdmin(false);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 

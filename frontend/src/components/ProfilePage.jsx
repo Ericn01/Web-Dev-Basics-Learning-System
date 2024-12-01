@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Mail, Save } from 'lucide-react';
+import { User, Mail, Save, UserCog } from 'lucide-react';
 import '../styling/Profile.css';
 import { useAuth } from '../services/authContext';
 import api from '../services/api';
@@ -8,7 +8,8 @@ const ProfilePage = () => {
   const { user, logout } = useAuth();
   const [formData, setFormData] = useState({
     username: user?.username || '',
-    email: user?.email || ''
+    email: user?.email || '',
+    role: user?.role || ''
   });
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState(null);
@@ -29,6 +30,7 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-container">
+      {console.log(user)}
       <header className="profile-header">
         <h1>Profile Settings</h1>
         <p>Manage your account information</p>
@@ -58,6 +60,19 @@ const ProfilePage = () => {
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              disabled={!isEditing}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>
+              <UserCog className="form-icon" />
+              Role
+            </label>
+            <input
+              type="input"
+              value={formData.role}
+              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
               disabled={!isEditing}
             />
           </div>

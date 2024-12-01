@@ -18,12 +18,15 @@ import {
   HelpCircle,
   Terminal,
   Sun,
-  Moon
+  Moon,
+  Code2,
+  Settings,
+  Layout as LayoutIcon
 } from 'lucide-react';
 import '../styling/LayoutStyles.css';
 
 const Layout = ({ children }) => {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -61,7 +64,6 @@ const Layout = ({ children }) => {
       console.error('Logout failed:', error);
     }
   };
-
   const navigationItems = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/modules', label: 'Learning Modules', icon: BookOpen },
@@ -73,6 +75,11 @@ const Layout = ({ children }) => {
   const authNavigationItems = [
     { path: '/profile', label: 'Profile', icon: User },
     { path: '/progress', label: 'Progress', icon: Award },
+  ];
+
+  const adminNavigationItems = [
+    { path: '/admin', label: 'Admin Dashboard', icon: LayoutIcon },
+    { path: '/admin/users', label: 'User Management', icon: Settings },
   ];
 
   return (
@@ -142,19 +149,23 @@ const Layout = ({ children }) => {
       {/* Sidebar */}
       <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <nav className="sidebar-nav">
-          {navigationItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
-            >
-              <item.icon className="nav-icon" />
-              <span className="nav-label">{item.label}</span>
-            </Link>
-          ))}
+          <div className="nav-section">
+            <div className="nav-section-title">Navigation</div>
+            {navigationItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+              >
+                <item.icon className="nav-icon" />
+                <span className="nav-label">{item.label}</span>
+              </Link>
+            ))}
+          </div>
           
           {isAuthenticated && (
-            <div className="auth-nav">
+            <div className="nav-section">
+              <div className="nav-section-title">User</div>
               {authNavigationItems.map((item) => (
                 <Link
                   key={item.path}
@@ -167,12 +178,45 @@ const Layout = ({ children }) => {
               ))}
             </div>
           )}
-            <button onClick={toggleTheme} className="theme-toggle" aria-label="Toggle theme">
-                {isDarkMode ? <Sun /> : <Moon />}
+
+          {isAuthenticated && isAdmin && (
+            <div className="nav-section">
+              <div className="nav-section-title">Admin</div>
+              {adminNavigationItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+                >
+                  <item.icon className="nav-icon" />
+                  <span className="nav-label">{item.label}</span>
+                </Link>
+              ))}
+            </div>
+          )}
+
+          <div className="nav-section theme-section">
+            <div className="nav-section-title">Appearance</div>
+            <button 
+              onClick={toggleTheme} 
+              className="theme-toggle nav-item"
+              aria-label="Toggle theme"
+            >
+              {isDarkMode ? (
+                <>
+                  <Sun className="nav-icon" />
+                  <span className="nav-label">Light Mode</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="nav-icon" />
+                  <span className="nav-label">Dark Mode</span>
+                </>
+              )}
             </button>
+          </div>
         </nav>
       </aside>
-
       {/* Main Content */}
       <main className={`main-content ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         {children}

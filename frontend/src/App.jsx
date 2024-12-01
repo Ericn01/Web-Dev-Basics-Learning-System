@@ -1,6 +1,6 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './services/authContext';
-import { Login, Signup, AdminRoute } from './components/Authentication';
+import { Login, Signup, AdminRoute, ProtectedRoute } from './components/Authentication';
 import Layout from './components/Layout';
 import HomePage from './components/HomePage';
 import ModulesPage from './components/ModulesPage';
@@ -15,11 +15,6 @@ import AdminDashboard from './components/AdminDashboard';
 import { ThemeProvider } from './services/themeContext';
 
 import './styling/theme.css';
-
-const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? children : <Navigate to="/" />;
-};
 
 const App = () => {
   return (

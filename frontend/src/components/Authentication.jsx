@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, User, Github, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../services/authContext';
@@ -219,14 +219,21 @@ export const AdminRoute = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // If not loading and either not authenticated or not admin, redirect
     if (!loading && (!isAuthenticated || !isAdmin)) {
       navigate('/login');
     }
   }, [isAuthenticated, isAdmin, loading, navigate]);
 
+  // Show loading state
   if (loading) {
     return <div>Loading...</div>;
   }
-
+  // Only render children if user is authenticated and is admin
   return isAuthenticated && isAdmin ? children : null;
+};
+
+export const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/" />;
 };

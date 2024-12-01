@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Save, X } from 'lucide-react';
 import api from '../services/api';
-import '../styling/AdminDashboard.css'; // We'll create this CSS file next
+import '../styling/AdminDashboard.css'; 
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -18,8 +18,8 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await api.get('/admin/users');
-      setUsers(response.data.userProfiles);
+      const response = await api.get('/user/profiles');
+      setUsers(response.data.profileData.userProfiles);
       setError(null);
     } catch (err) {
       setError('Failed to fetch users');
@@ -36,7 +36,7 @@ const AdminDashboard = () => {
   const handleAddUser = async (e) => {
     e.preventDefault();
     try {
-      await api.post('/admin/users', newUser);
+      await api.post('/register', newUser);
       setShowAddUser(false);
       setNewUser({ username: '', email: '', password: '', role: 'user' });
       fetchUsers();
@@ -45,9 +45,9 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleUpdateRole = async (userId, newRole) => {
+  const handleUpdateRole = async (user_id, newRole) => {
     try {
-      await api.put(`/admin/users/${userId}/role`, { role: newRole });
+      await api.put(`/user/profile/${user_id}/role`, { role: newRole });
       fetchUsers();
     } catch (err) {
       setError('Failed to update user role');
