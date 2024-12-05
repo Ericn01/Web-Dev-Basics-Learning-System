@@ -1,5 +1,6 @@
 :root {
     /* Light theme variables */
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     --bg-primary: #ffffff;
     --bg-secondary: #f8fafc;
     --text-primary: #111827;
@@ -16,6 +17,7 @@
   
   :root.dark {
     /* Dark theme variables */
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     --bg-primary: #111827;
     --bg-secondary: #1f2937;
     --text-primary: #f9fafb;
