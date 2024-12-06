@@ -120,104 +120,102 @@ const handleGetQuizzesByID = async (req, res) => {
 
 
 const handleQuizSubmit = async (req, res) => {
-    try {
-      const { id } = req.params;
-      
-      const { answers, user_id } = req.body;
-  
-      // Validate answers
-      if (!answers || !Array.isArray(answers) || answers.length === 0) {
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid input. Answers array is required.',
-        });
-      }
-  
-      const connection = await connectToDB();
-  
-      // Get quiz details with validation
-      const [quizDetails] = await connection.execute(
-        'SELECT module_id FROM Quizzes WHERE quiz_id = ?',
-        [id]
-      );
-  
-      if (quizDetails.length === 0) {
-        await connection.end();
-        return res.status(404).json({
-          success: false,
-          message: 'Quiz not found.',
-        });
-      }
-  
-      const module_id = quizDetails[0].module_id;
-  
-      // Get questions with validation
-      const [questions] = await connection.execute(
-        'SELECT question_id, correct_answer FROM Questions WHERE quiz_id = ?',
-        [id]
-      );
-  
-      if (questions.length === 0) {
-        await connection.end();
-        return res.status(404).json({
-          success: false,
-          message: 'No questions found for the specified quiz.',
-        });
-      }
-  
-      // Calculate score
-      let score = 0;
-      const validatedAnswers = answers.filter(answer => 
-        typeof answer.question_id === 'number' && 
-        answer.answer !== undefined
-      );
-  
-      questions.forEach((question) => {
-        const userAnswer = validatedAnswers.find(
-          (a) => a.question_id === question.question_id
-        );
-        if (userAnswer && userAnswer.answer === question.correct_answer) {
-          score++;
-        }
-      });
-  
-      const totalQuestions = questions.length;
-      const percentageScore = Math.round((score / totalQuestions) * 100);
-  
-      // Update progress
-      try {
-        await connection.execute(
-          `INSERT INTO UserProgress (user_id, module_id, quiz_id, score, completed_at) 
-           VALUES (?, ?, ?, ?, NOW())
-           ON DUPLICATE KEY UPDATE 
-           score = VALUES(score),
-           completed_at = NOW()`,
-          [user_id, module_id, id, percentageScore]
-        );
-      } catch (err) {
-        console.error('Error updating progress:', err);
-        throw new Error('Failed to update progress');
-      }
-  
-      await connection.end();
-  
-      res.status(200).json({
-        success: true,
-        message: 'Quiz submitted successfully.',
-        data: {
-          score: percentageScore,
-          totalQuestions,
-          correctAnswers: score,
-        },
-      });
-    } catch (err) {
-      console.error('An error occurred while submitting the quiz:', err);
-      res.status(500).json({ 
-        success: false, 
-        message: err.message || 'A server error occurred.' 
+  try {
+    const { id } = req.params;
+    const { answers, user_id } = req.body;
+
+    // Validate answers
+    if (!answers || !Array.isArray(answers) || answers.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid input. Answers array is required.',
       });
     }
+
+    const connection = await connectToDB();
+
+    // Get quiz details with validation
+    const [quizDetails] = await connection.execute(
+      'SELECT module_id FROM Quizzes WHERE quiz_id = ?',
+      [id]
+    );
+
+    if (quizDetails.length === 0) {
+      await connection.end();
+      return res.status(404).json({
+        success: false,
+        message: 'Quiz not found.',
+      });
+    }
+
+    const module_id = quizDetails[0].module_id;
+
+    // Get questions with validation
+    const [questions] = await connection.execute(
+      'SELECT question_id, correct_answer FROM Questions WHERE quiz_id = ?',
+      [id]
+    );
+
+    if (questions.length === 0) {
+      await connection.end();
+      return res.status(404).json({
+        success: false,
+        message: 'No questions found for the specified quiz.',
+      });
+    }
+
+    // Calculate score
+    let score = 0;
+    questions.forEach((question) => {
+      const userAnswer = answers.find((a) => a.question_id === question.question_id);
+      
+      // Log user answer and correct answer for debugging
+      console.log(`Question ID: ${question.question_id}, User Answer: ${userAnswer ? userAnswer.answer : 'N/A'}, Correct Answer: ${question.correct_answer}`);
+      
+      if (userAnswer && userAnswer.answer === question.correct_answer) {
+        score++;
+      }
+    });
+    
+
+    const totalQuestions = questions.length;
+    const percentageScore = Math.round((score / totalQuestions) * 100);
+
+    // Update progress
+    try {
+      await connection.execute(
+        `INSERT INTO UserProgress (user_id, module_id, quiz_id, score, completed_at) 
+         VALUES (?, ?, ?, ?, NOW())
+         ON DUPLICATE KEY UPDATE 
+         score = VALUES(score),
+         completed_at = NOW()`,
+        [user_id, module_id, id, percentageScore]
+      );
+    } catch (err) {
+      console.error('Error updating progress:', err);
+      throw new Error('Failed to update progress');
+    }
+
+    await connection.end();
+
+    res.status(200).json({
+      success: true,
+      message: 'Quiz submitted successfully.',
+      data: {
+        score: percentageScore,
+        totalQuestions,
+        correctAnswers: score,
+      },
+    });
+  } catch (err) {
+    console.error('An error occurred while submitting the quiz:', err);
+    res.status(500).json({
+      success: false,
+      message: err.message || 'A server error occurred.',
+    });
+  }
 };
+
 
 const handleQuizAddQuestion = async (req, res) => {
     try {
