@@ -170,7 +170,7 @@ const handleQuizSubmit = async (req, res) => {
       const userAnswer = answers.find((a) => a.question_id === question.question_id);
       
       // Log user answer and correct answer for debugging
-      console.log(`Question ID: ${question.question_id}, User Answer: ${userAnswer ? userAnswer.answer : 'N/A'}, Correct Answer: ${question.correct_answer}`);
+      console.log(`DIRECT FROM BACK questions.forEach((question) Question ID: ${question.question_id}, User Answer: ${userAnswer ? userAnswer.answer : 'N/A'}, Correct Answer: ${question.correct_answer}`);
       
       if (userAnswer && userAnswer.answer === question.correct_answer) {
         score++;

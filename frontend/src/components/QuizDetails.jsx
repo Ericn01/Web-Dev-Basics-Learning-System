@@ -45,29 +45,44 @@ const QuizDetail = () => {
 
   const handleSubmit = async () => {
     try {
+      // Log answers before submission for debugging
+      console.log("Submitting quiz with answers:", answers);
+  
+      // Send quiz answers to the backend for validation
       const response = await api.post(`/quizzes/${id}/submit`, {
-        user_id: user.user_id, 
-        quiz_id: id,
+        user_id: user.user_id, // Get the current user's ID
+        quiz_id: id,            // The quiz ID
         answers: Object.entries(answers).map(([questionId, answer]) => ({
-          question_id: parseInt(questionId),
+          question_id: parseInt(questionId), // Ensure questionId is parsed as a number
           answer
         }))
       });
-      console.log(response)
+  
+      // Log the response from the backend for debugging
+      console.log("Response from backend:", response.data);
+  
+      // Check if the submission was successful
       if (response.data.success) {
-        setScore(response.data.data.score);
-        setTotalQuestions(response.data.data.totalQuestions);
-        setCorrectAnswers(response.data.data.correctAnswers);
-        setSubmitted(true);
+        // Set state with returned data
+        setScore(response.data.data.score);  // Set the score returned from the backend
+        setTotalQuestions(response.data.data.totalQuestions); // Set the total number of questions
+        setCorrectAnswers(response.data.data.correctAnswers); // Set the number of correct answers
+        setSubmitted(true); // Mark the quiz as submitted
+
+        console.log(response.data.data.score, response.data.data.totalQuestions, response.data.data.correctAnswers);
+
+
       } else {
+        // Handle error from the backend
         setError(response.data.message || 'Failed to submit quiz');
       }
     } catch (err) {
-      
+      // Log and handle any errors during the submission
+      console.error("Submission error:", err);
       setError('Failed to submit quiz. Please try again.');
-      console.error(err);
     }
   };
+  
 
   if (loading) {
     return <div className="loader">Loading quiz...</div>;
