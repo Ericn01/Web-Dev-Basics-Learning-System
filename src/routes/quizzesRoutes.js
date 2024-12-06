@@ -122,8 +122,8 @@ const handleGetQuizzesByID = async (req, res) => {
 const handleQuizSubmit = async (req, res) => {
     try {
       const { id } = req.params;
-      const user_id = req.user.user_id;  // Get user_id from authenticated token
-      const { answers } = req.body;
+      
+      const { answers, user_id } = req.body;
   
       // Validate answers
       if (!answers || !Array.isArray(answers) || answers.length === 0) {

@@ -48,10 +48,8 @@ export const AuthProvider = ({ children }) => {
 
 
   const signup = async (userData) => {
-    console.log(userData)
     const response = await api.post('/register', userData);
     const { token } = response.data;
-    console.log(response)
     localStorage.setItem('token', token);
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     
@@ -71,8 +69,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const getUserId = () => {
+    return user.user_id;
+  }
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, isAdmin, login, signup, logout, loading }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, isAdmin, login, signup, logout, getUserId, loading }}>
        {children}
     </AuthContext.Provider>
   );
