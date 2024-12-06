@@ -10,6 +10,8 @@ const QuizDetail = () => {
   const navigate = useNavigate();
   const [quiz, setQuiz] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
