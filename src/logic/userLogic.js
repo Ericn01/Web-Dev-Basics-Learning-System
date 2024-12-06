@@ -9,9 +9,7 @@ const getAllUserProfiles = async() => {
     const [userProfiles] = await connection.execute(
         `SELECT Users.user_id, Users.username, Users.email, UserProgress.quiz_id, UserProgress.score
         FROM Users 
-        LEFT JOIN UserProgress ON Users.user_id = UserProgress.user_id
-        GROUP BY Users.user_id
-        ORDER BY ID ASC`
+        LEFT JOIN UserProgress ON Users.user_id = UserProgress.user_id`
     );
     await connection.end();
     return {userProfiles: userProfiles};

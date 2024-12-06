@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, ChevronRight } from 'lucide-react';
+import { BookOpen, ChevronRight, PenBoxIcon } from 'lucide-react';
 import '../styling/Modules.css';
 import api from '../services/api';
+import CreateModuleForm from './CreateModuleForm';
+import EditModuleForm from './EditModuleForm';
 
 const ModulesPage = () => {
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingModule, setEditingModule] = useState(null);
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -24,6 +28,11 @@ const ModulesPage = () => {
 
     fetchModules();
   }, []);
+
+  const handleEditClick = (e, module) => {
+    e.preventDefault(); // Prevent navigation from Link
+    setEditingModule(module);
+  };
 
   if (loading) {
     return <div className="loader">Loading modules...</div>;
@@ -55,9 +64,28 @@ const ModulesPage = () => {
               <p>{module.description}</p>
             </div>
             <ChevronRight className="module-arrow" />
+            <button onClick={(e) => handleEditClick(e, module)}>
+              <PenBoxIcon className="module-edit" />
+            </button>
           </Link>
         ))}
+        <button 
+          className="add-module"
+          onClick={() => setShowCreateModal(true)}
+        >
+          + Add a New Module
+        </button>
       </div>
+      {showCreateModal && (
+        <CreateModuleForm onClose={() => setShowCreateModal(false)} />
+      )}
+      
+      {editingModule && (
+        <EditModuleForm 
+          module={editingModule} 
+          onClose={() => setEditingModule(null)} 
+        />
+      )}
     </div>
   );
 };

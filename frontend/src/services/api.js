@@ -1,5 +1,9 @@
 import axios from 'axios';
 
+const testApi = axios.create({
+  baseURL: 'http://localhost:8000/webdev-learning/api'
+});
+
 const api = axios.create({
   baseURL: 'http://34.41.137.211:8000/webdev-learning/api' // Setting up the base URL 
 });

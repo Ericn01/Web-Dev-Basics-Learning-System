@@ -15,11 +15,6 @@ const app = express();
 app.use(cors()); 
 app.use(express.json());
 
-if (!process.env.JWT_SECRET) {
-  console.error('JWT_SECRET is not defined in environment variables');
-  process.exit(1);
-}
-
 app.use('/webdev-learning/api', userAuthRoutes);
 app.use('/webdev-learning/api', userRoutes);
 app.use('/webdev-learning/api', learningModuleRoutes);

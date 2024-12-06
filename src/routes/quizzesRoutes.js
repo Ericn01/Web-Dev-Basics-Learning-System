@@ -281,9 +281,57 @@ const handleQuizAddQuestion = async (req, res) => {
 };
 
 
+const handleCreateQuiz = async (req, res) => {
+    const connection = await connectToDB();
+    
+    try {
+      const  { title, questions } = req.body;  
+
+      // Insert quiz
+      const [quizResult] = await connection.execute(
+        'INSERT INTO Quizzes (module_id, title) VALUES (?, ?)',
+        [parseInt(Math.random() * 5), title] // Module ID really doesn't matter right now - generating a random value between 0-5 for testing
+      );
+      const quizId = quizResult.insertId;
+  
+      // Insert questions and their options
+      for (const question of questions) {
+        const [questionResult] = await connection.execute(
+          'INSERT INTO Questions (quiz_id, question_text, correct_answer) VALUES (?, ?, ?)',
+          [quizId, question.question_text, question.correct_answer]
+        );
+        const questionId = questionResult.insertId;
+  
+        // Insert options
+        for (const option of question.options) {
+          await connection.execute(
+            'INSERT INTO Options (question_id, option_text) VALUES (?, ?)',
+            [questionId, option]
+          );
+        }
+      }
+  
+      res.status(201).json({
+        success: true,
+        message: 'Quiz created successfully',
+        data: { quiz_id: quizId }
+      });
+  
+    } catch (err) {
+      console.error('Error creating quiz:', err);
+      res.status(500).json({
+        success: false,
+        message: 'An error occurred while creating the quiz'
+      });
+    } finally {
+      await connection.end();
+    }
+  };
+
 router.get('/quizzes', handleGetQuizzes);
 router.get('/quizzes/:id', handleGetQuizzesByID);
 router.post('/quizzes/:id/submit', handleQuizSubmit);
 router.post('/quizzes/:id/add', handleQuizAddQuestion);
+router.post('/quizzes', handleCreateQuiz) // Add a new quiz route.
 
 module.exports = router;

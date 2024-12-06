@@ -3,18 +3,19 @@ import { Link } from 'react-router-dom';
 import { PenTool, CheckCircle, Clock } from 'lucide-react';
 import '../styling/Quizzes.css';
 import api from '../services/api';
+import CreateQuizForm from './CreateQuizForm';
 
 const QuizzesPage = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showCreateModal, setShowCreateModal] = useState(false)
 
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
         const response = await api.get('/quizzes');
         const quizzesData = response.data.data;
-        console.log(quizzesData)
         setQuizzes(quizzesData);
         setLoading(false);
       } catch (err) {
@@ -63,6 +64,15 @@ const QuizzesPage = () => {
           </Link>
         ))}
       </div>
+      <button 
+          className="add-quiz"
+          onClick={() => setShowCreateModal(true)}
+        >
+          + Create a quiz.
+        </button>
+        {showCreateModal && (
+         <CreateQuizForm moduleId={1} onClose={() => setShowCreateModal(false)} />
+      )}
     </div>
   );
 };
