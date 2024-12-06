@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
+import { useAuth } from '../services/authContext';
 import '../styling/QuizDetails.css';
 import api from '../services/api';
 
@@ -14,6 +15,8 @@ const QuizDetail = () => {
   const [error, setError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(null);
+
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchQuizDetails = async () => {
@@ -41,12 +44,14 @@ const QuizDetail = () => {
   const handleSubmit = async () => {
     try {
       const response = await api.post(`/quizzes/${id}/submit`, {
+        user_id: user.user_id, 
+        quiz_id: id,
         answers: Object.entries(answers).map(([questionId, answer]) => ({
           question_id: parseInt(questionId),
           answer
         }))
       });
-  
+      console.log(response)
       if (response.data.success) {
         setScore(response.data.data.score);
         setTotalQuestions(response.data.data.totalQuestions);
@@ -56,6 +61,7 @@ const QuizDetail = () => {
         setError(response.data.message || 'Failed to submit quiz');
       }
     } catch (err) {
+      
       setError('Failed to submit quiz. Please try again.');
       console.error(err);
     }

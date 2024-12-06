@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  console.log(user)
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -69,12 +70,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const getUserId = () => {
-    return user.user_id;
-  }
-
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, isAdmin, login, signup, logout, getUserId, loading }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, isAdmin, login, signup, logout, loading }}>
        {children}
     </AuthContext.Provider>
   );
