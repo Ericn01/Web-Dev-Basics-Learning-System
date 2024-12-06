@@ -5,13 +5,13 @@ import { useAuth } from '../services/authContext';
 import '../styling/QuizDetails.css';
 import api from '../services/api';
 
-const QuizDetail = () => {
+const QuizDetail = ({setCompletedQuizzes}) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [quiz, setQuiz] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
-  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(null);
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,11 +53,15 @@ const QuizDetail = () => {
           answer
         }))
       });
-      console.log(response)
+
       if (response.data.success) {
         setScore(response.data.data.score);
         setTotalQuestions(response.data.data.totalQuestions);
         setCorrectAnswers(response.data.data.correctAnswers);
+        setCompletedQuizzes({
+          quiz_id: response.quiz_id,
+          isCompleted: true 
+        });
         setSubmitted(true);
       } else {
         setError(response.data.message || 'Failed to submit quiz');

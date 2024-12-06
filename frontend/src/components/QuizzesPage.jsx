@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { PenTool, CheckCircle, Clock } from 'lucide-react';
+import { PenTool, CheckCircle, Clock, Check } from 'lucide-react';
 import '../styling/Quizzes.css';
 import api from '../services/api';
 import CreateQuizForm from './CreateQuizForm';
@@ -10,6 +10,13 @@ const QuizzesPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false)
+
+  const [completedQuizzes, setCompletedQuizzes] = useState(
+    quizzes.map((quiz) => ({
+      quiz: quiz.quiz_id,
+      isCompleted: false
+    }))
+);
 
   useEffect(() => {
     const fetchQuizzes = async () => {
@@ -43,10 +50,16 @@ const QuizzesPage = () => {
       </header>
 
       <div className="quizzes-grid">
+        {completedQuizzes.map((quiz) => {
+          if (quiz.isCompleted){
+            <Check />
+          }
+        })}
         {quizzes.map((quiz) => (
           <Link 
             to={`/quizzes/${quiz.quiz_id}`} 
             key={quiz.quiz_id}
+            props={setCompletedQuizzes}
             className="quiz-card"
           >
             <div className="quiz-icon">
@@ -60,6 +73,7 @@ const QuizzesPage = () => {
                   {quiz.questions?.length || 0} questions
                 </span>
               </div>
+              <p className='module-tag'> Module {quiz.module_id} </p>
             </div>
           </Link>
         ))}
