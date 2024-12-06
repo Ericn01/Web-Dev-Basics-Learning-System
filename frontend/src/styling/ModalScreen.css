@@ -91,3 +91,82 @@
   .button-secondary:hover {
     background-color: var(--error-bg);
   }
+
+
+  /* Quiz details modal styling */
+
+  /* Add these to your existing CSS file */
+
+.quiz-card {
+    position: relative;
+    /* ... your existing quiz-card styles ... */
+  }
+  
+  .completion-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: var(--accent-color);
+    border: none;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    z-index: 2;
+  }
+  
+  .completion-button:hover {
+    background: var(--accent-hover);
+  }
+  
+  .completion-button svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: white;
+  }
+  
+  .completion-details {
+    padding: 1rem 0;
+  }
+  
+  .quiz-header {
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .quiz-header h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+  }
+  
+  .details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .detail-label {
+    color: var(--text-secondary);
+  }
+  
+  .detail-value {
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  
+  .detail-value.score {
+    color: var(--accent-color);
+  }

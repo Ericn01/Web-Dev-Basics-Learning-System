@@ -5,7 +5,7 @@ import { useAuth } from '../services/authContext';
 import '../styling/QuizDetails.css';
 import api from '../services/api';
 
-const QuizDetail = ({setCompletedQuizzes}) => {
+const QuizDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [quiz, setQuiz] = useState(null);
@@ -32,7 +32,6 @@ const QuizDetail = ({setCompletedQuizzes}) => {
         setLoading(false);
       }
     };
-
     fetchQuizDetails();
   }, [id]);
 
@@ -58,10 +57,6 @@ const QuizDetail = ({setCompletedQuizzes}) => {
         setScore(response.data.data.score);
         setTotalQuestions(response.data.data.totalQuestions);
         setCorrectAnswers(response.data.data.correctAnswers);
-        setCompletedQuizzes({
-          quiz_id: response.quiz_id,
-          isCompleted: true 
-        });
         setSubmitted(true);
       } else {
         setError(response.data.message || 'Failed to submit quiz');
