@@ -11,7 +11,7 @@ const QuizDetail = () => {
   const [quiz, setQuiz] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
-  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(null);
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -32,7 +32,6 @@ const QuizDetail = () => {
         setLoading(false);
       }
     };
-
     fetchQuizDetails();
   }, [id]);
 
@@ -53,7 +52,7 @@ const QuizDetail = () => {
           answer
         }))
       });
-      console.log(response)
+
       if (response.data.success) {
         setScore(response.data.data.score);
         setTotalQuestions(response.data.data.totalQuestions);
@@ -109,7 +108,7 @@ const QuizDetail = () => {
                 <button
                     key={option.option_id} 
                     className={`option-button ${
-                    answers[currentQuestionData.question_id] === option.option_id ? 'selected' : ''}`}
+                    answers[currentQuestionData.question_id] === option.option_text ? 'selected' : ''}`}
                     onClick={() => handleAnswerSelect(currentQuestionData.question_id, option.option_text)}
                 >
                     {option.option_text}  
