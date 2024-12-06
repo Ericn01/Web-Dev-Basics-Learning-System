@@ -31,7 +31,7 @@ const getUserProfile = async (userId) => {
     const connection = await connectToDB();
     try {
       const [users] = await connection.execute(
-        'SELECT user_id, username, email, user_role FROM Users WHERE user_id = ?',
+        'SELECT username, email, user_role FROM Users WHERE user_id = ?',
         [userId]
       );
       
@@ -98,6 +98,7 @@ const handleGetProfile = async (req, res) => {
       }
       
       res.json({
+          user_id: userId,
           username: user.username,
           email: user.email,
           role: user.user_role,
