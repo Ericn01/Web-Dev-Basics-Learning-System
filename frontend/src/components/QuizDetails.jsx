@@ -113,7 +113,7 @@ const QuizDetail = ({setCompletedQuizzes}) => {
                 <button
                     key={option.option_id} 
                     className={`option-button ${
-                    answers[currentQuestionData.question_id] === option.option_id ? 'selected' : ''}`}
+                    answers[currentQuestionData.question_id] === option.option_text ? 'selected' : ''}`}
                     onClick={() => handleAnswerSelect(currentQuestionData.question_id, option.option_text)}
                 >
                     {option.option_text}  
