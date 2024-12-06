@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle } from 'lucide-react';
 import { useAuth } from '../services/authContext';
 import '../styling/QuizDetails.css';
 import api from '../services/api';
@@ -37,37 +37,40 @@ const QuizDetail = () => {
   }, [id]);
 
   const handleAnswerSelect = (questionId, answer) => {
-    setAnswers(prev => ({
+    setAnswers((prev) => ({
       ...prev,
-      [questionId]: answer
+      [questionId]: answer,
     }));
   };
 
   const handleSubmit = async () => {
     try {
       const response = await api.post(`/quizzes/${id}/submit`, {
-        user_id: user.user_id, 
+        user_id: user.user_id,
         quiz_id: id,
         answers: Object.entries(answers).map(([questionId, answer]) => ({
           question_id: parseInt(questionId),
-          answer
-        }))
+          answer,
+        })),
       });
-      console.log(response)
       if (response.data.success) {
         setScore(response.data.data.score);
         setTotalQuestions(response.data.data.totalQuestions);
         setCorrectAnswers(response.data.data.correctAnswers);
         setSubmitted(true);
+  
+        // Mark quiz as completed
+        const completedQuizzes = JSON.parse(localStorage.getItem('completedQuizzes')) || [];
+        localStorage.setItem('completedQuizzes', JSON.stringify([...completedQuizzes, id]));
       } else {
         setError(response.data.message || 'Failed to submit quiz');
       }
     } catch (err) {
-      
       setError('Failed to submit quiz. Please try again.');
       console.error(err);
     }
   };
+  
 
   if (loading) {
     return <div className="loader">Loading quiz...</div>;
@@ -85,10 +88,7 @@ const QuizDetail = () => {
 
   return (
     <div className="quiz-detail-container">
-      <button 
-        className="back-button"
-        onClick={() => navigate('/quizzes')}
-      >
+      <button className="back-button" onClick={() => navigate('/quizzes')}>
         <ArrowLeft />
         Back to Quizzes
       </button>
@@ -105,16 +105,17 @@ const QuizDetail = () => {
           <div className="question-container">
             <h2>{currentQuestionData.question_text}</h2>
             <div className="options-container">
-            {currentQuestionData.options.map((option, index) => (
+              {currentQuestionData.options.map((option) => (
                 <button
-                    key={option.option_id} 
-                    className={`option-button ${
-                    answers[currentQuestionData.question_id] === option.option_id ? 'selected' : ''}`}
-                    onClick={() => handleAnswerSelect(currentQuestionData.question_id, option.option_id)}
+                  key={option.option_id}
+                  className={`option-button ${
+                    answers[currentQuestionData.question_id] === option.option_id ? 'selected' : ''
+                  }`}
+                  onClick={() => handleAnswerSelect(currentQuestionData.question_id, option.option_id)}
                 >
-                    {option.option_text}  
+                  {option.option_text}
                 </button>
-            ))}
+              ))}
             </div>
           </div>
 
@@ -122,12 +123,12 @@ const QuizDetail = () => {
             <button
               className="nav-button"
               disabled={currentQuestion === 0}
-              onClick={() => setCurrentQuestion(prev => prev - 1)}
+              onClick={() => setCurrentQuestion((prev) => prev - 1)}
             >
               Previous
             </button>
             {currentQuestion === quiz.questions.length - 1 ? (
-              <button 
+              <button
                 className="submit-button"
                 onClick={handleSubmit}
                 disabled={Object.keys(answers).length !== quiz.questions.length}
@@ -135,10 +136,7 @@ const QuizDetail = () => {
                 Submit Quiz
               </button>
             ) : (
-              <button
-                className="nav-button"
-                onClick={() => setCurrentQuestion(prev => prev + 1)}
-              >
+              <button className="nav-button" onClick={() => setCurrentQuestion((prev) => prev + 1)}>
                 Next
               </button>
             )}
@@ -147,13 +145,14 @@ const QuizDetail = () => {
       ) : (
         <div className="quiz-results">
           <div className="score-display">
+            <CheckCircle className="completion-checkmark" />
             <h2>Quiz Complete!</h2>
             <p className="score">Your Score: {score}%</p>
+            <p>
+              Correct Answers: {correctAnswers} / {totalQuestions}
+            </p>
           </div>
-          <button 
-            className="retry-button"
-            onClick={() => navigate('/quizzes')}
-          >
+          <button className="retry-button" onClick={() => navigate('/quizzes')}>
             Back to Quizzes
           </button>
         </div>

@@ -142,3 +142,10 @@
       padding: 24px;
     }
   }
+
+  .completion-checkmark {
+    color: #28a745; /* Green for success */
+    font-size: 3rem; /* Adjust size as needed */
+    margin-bottom: 1rem; /* Add spacing */
+  }
+  
