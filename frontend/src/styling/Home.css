@@ -1,35 +1,6 @@
-/* HomePage.css */
 .home-container {
   min-height: 100vh;
   padding-top: 64px;
-}
-
-/* Hero Section */
-.hero-section {
-  background: linear-gradient(135deg, var(--accent-color) 0%, var(--bg-secondary) 100%);
-  color: var(--bg-primary);
-  padding: 80px 24px;
-  text-align: center;
-}
-
-.hero-content {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.hero-content h1 {
-  font-size: 3rem;
-  font-weight: 700;
-  margin-bottom: 24px;
-  line-height: 1.2;
-  color: var(--text-primary)
-}
-
-.hero-content p {
-  font-size: 1.25rem;
-  margin-bottom: 32px;
-  opacity: 0.9;
-  color: var(--text-secondary)
 }
 
 .cta-button {
@@ -188,62 +159,154 @@
   height: 24px;
 }
 
-/* Auth Modal */
-.auth-modal {
-  background: var(--bg-primary);
-  padding: 32px;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 400px;
-  position: relative;
+
+
+/* Hero Section Styling */
+.hero-section {
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--bg-secondary) 100%);
+  padding: 60px 24px;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
 }
 
-.close-button {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: var(--text-secondary);
-  cursor: pointer;
-}
-
-.auth-modal h2 {
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
   text-align: center;
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-content h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 800;
+  margin-bottom: 24px;
+  line-height: 1.2;
+  color: var(--text-primary);
+  background: linear-gradient(to right, var(--text-primary), var(--accent-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Live preview styling */
+.live-preview {
+  width: 100%;
+  max-width: 1200px;
+  background: var(--bg-primary);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin-top: 32px;
+}
+
+.live-preview h2 {
   font-size: 1.5rem;
   color: var(--text-primary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.code-playground {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
   margin-bottom: 24px;
 }
 
-.submit-button {
-  width: 100%;
+.editor-container {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.editor-header {
+  background: var(--bg-secondary);
   padding: 12px;
-  background: var(--accent-color);
-  color: var(--bg-primary);
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  margin-top: 24px;
-}
-
-.social-login {
-  margin-top: 24px;
-}
-
-.divider {
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
-  text-align: center;
-  margin: 24px 0;
-  color: var(--text-secondary);
+  gap: 8px;
 }
 
-.divider::before,
-.divider::after {
-  content: '';
-  flex: 1;
+.editor-header span {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.editor-header .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--accent-color);
+}
+
+.code-editor {
+  width: 100%;
+  min-height: 300px;
+  padding: 16px;
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border: none;
+  resize: vertical;
+}
+
+.code-editor:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--accent-color);
+}
+
+.preview-container {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.preview-header {
+  background: var(--bg-secondary);
+  padding: 12px;
   border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-window {
+  width: 100%;
+  height: 300px;
+  border: none;
+  background: white;
+}
+
+.preview-window iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .code-playground {
+    grid-template-columns: 1fr;
+  }
+  
+  .hero-section {
+    padding: 40px 16px;
+  }
+  
+  .live-preview {
+    padding: 16px;
+  }
 }

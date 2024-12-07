@@ -2,27 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Book, 
-  Code, 
   Users, 
   Medal, 
   ArrowRight, 
-  Github,
   ChevronRight,
-  Mail,
-  Lock,
-  User,
-  CheckCircle
+  Code,
+  Layout, 
+  Play
 } from 'lucide-react';
 import '../styling/Home.css';
 import api from '../services/api';
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const [hasAccount, setHasAccount] = useState(false);
-
-  const handleAuthClick = () => {
-    navigate(hasAccount ? 'login' : 'signup');
-  }
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
@@ -46,122 +38,53 @@ const HomePage = () => {
     }
   }, []);
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-    setError(null);
-    
-    try {
-      const endpoint = hasAccount ? '/login' : '/register';
-      const response = await api.post(endpoint, {
-        username: formData.username,
-        email: formData.email,
-        password: formData.password
-      });
-
-      localStorage.setItem('authToken', response.data.token);
-      localStorage.setItem('userEmail', formData.email);
-      setIsLoggedIn(true);
-      setUserEmail(formData.email);
-      setIsModalOpen(false);
-      setFormData({ email: '', password: '', username: '' });
-
-      // Redirect to modules page after successful login/signup
-      navigate('/modules');
-    } catch (error) {
-      setError(error.response?.data?.message || 'Authentication failed');
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await api.post('/logout');
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userEmail');
-      setIsLoggedIn(false);
-      setUserEmail('');
-      setHasAccount(false);
-      navigate('/');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-
-  const handleEmailChange = async (e) => {
-    const email = e.target.value;
-    setFormData({...formData, email});
-    
-    if (isValidEmail(email)) {
-      try {
-        const response = await api.post('/check-account', { email });
-        setHasAccount(response.data.exists);
-      } catch (error) {
-        console.error('Error checking account:', error);
-      }
-    }
-  };
-
-  const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
   const modulesList = [
-    { number: 1, title: 'HTML Fundamentals', description: 'Master the building blocks of web pages' },
-    { number: 2, title: 'CSS Basics', description: 'Style your web pages with confidence' },
-    { number: 3, title: 'Layouts & Responsive Design', description: 'Create beautiful, responsive layouts' },
-    { number: 4, title: 'HTTP GET & POST', description: 'Learn how to communicate with web servers' }
+    { number: 1, title: 'HTML Basics', description: 'Learn how to create simple web pages' },
+    { number: 2, title: 'Semantic HTML', description: 'Improve your web pages by providing clear tags.' },
+    { number: 3, title: 'CSS Basics', description: 'Style your web pages with confidence' },
+    { number: 4, title: 'HTTP Methods', description: 'Learn how to communicate with web servers' }
   ];
 
   return (
     <div className="home-container">
+      {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
-          <h1>Learn HTML & CSS to go from Zero to Hero</h1>
-          <p>Start your web development journey with interactive lessons, real-world projects, and expert guidance.</p>
-          <button 
+          <h1>Master the Building Blocks of the Web!</h1>
+          <p>Learn HTML, CSS, and HTTP methods through hands-on modules and quizzes designed for absolute beginners.</p>
+        </div>
+        <LivePreview />
+        <button 
             className="cta-button"
-            onClick={() => isLoggedIn ? navigate('/modules') : setIsModalOpen(true)}
+            onClick={() => navigate('/signup')}
           >
-            Start Learning Now <ArrowRight className="arrow-icon" />
-          </button>
-        </div>
-        <div className="hero-stats">
-          <div className="stat-card">
-            <h3>10K+</h3>
-            <p>Active Learners</p>
-          </div>
-          <div className="stat-card">
-            <h3>100+</h3>
-            <p>Interactive Lessons</p>
-          </div>
-          <div className="stat-card">
-            <h3>50+</h3>
-            <p>Practice Projects</p>
-          </div>
-        </div>
+            Start Learning Today! <ArrowRight className="arrow-icon" />
+        </button>
       </section>
 
+      {/* Features Section */}
       <section className="features-section">
         <h2>Why Choose TagStart?</h2>
         <div className="features-grid">
           <div className="feature-card">
             <Book className="feature-icon" />
-            <h3>Interactive Learning</h3>
-            <p>Learn by testing your knowledge as you complete quizzes. Level up as you learn more!</p>
+            <h3>Interactive Modules</h3>
+            <p>Learn through interactive lessons tailored to beginners.</p>
           </div>
           <div className="feature-card">
             <Users className="feature-icon" />
-            <h3>Community Support</h3>
-            <p>Interact with quizzes by adding your feedback, and see what others have to say about it.</p>
+            <h3>Quizzes & Challenges</h3>
+            <p>Test your knowledge and learn from others' feedback.</p>
           </div>
           <div className="feature-card">
             <Medal className="feature-icon" />
-            <h3>Project-Based</h3>
-            <p>Build real-world projects that you can add to your portfolio.</p>
+            <h3>Progress Tracking</h3>
+            <p>See how far you've come and what's next on your learning path.</p>
           </div>
         </div>
       </section>
 
+      {/* Curriculum Section */}
       <section className="curriculum-section">
         <h2>Learning Path</h2>
         <div className="modules-grid">
@@ -177,8 +100,99 @@ const HomePage = () => {
           ))}
         </div>
       </section>
+    </div>
+  );
+};
 
-     </div>
+// Live Code Preview Section that's integrated with the home page
+const LivePreview = () => {
+  const [htmlCode, setHtmlCode] = useState(
+    `<div class="welcome-message">
+        <h1>Hello World!</h1>
+        <p>Start editing to see your changes live!</p>
+      </div>`
+    );
+    
+  const [cssCode, setCssCode] = useState(
+      `
+      body{
+        background-color: 
+      }
+      .welcome-message {
+        text-align: center;
+        padding: 2rem;
+        font-family: system-ui, sans-serif;
+      }
+      
+      h1 {
+        color: #fefefe;
+        margin-bottom: 1rem;
+      }
+      
+      p {
+        color: navy;
+      }`
+    );
+
+  const [previewContent, setPreviewContent] = useState('');
+
+  useEffect(() => {
+    setPreviewContent(`
+      <style>${cssCode}</style>
+      ${htmlCode}
+    `);
+  }, [htmlCode, cssCode]);
+  
+  return (
+    <div className="live-preview">
+      <h2>
+        <Code className="icon" />
+        Interactive Code Editor
+      </h2>
+      <div className="code-playground">
+        <div className="editor-container">
+          <div className="editor-header">
+            <Layout className="icon" />
+            <span>HTML</span>
+          </div>
+          <textarea
+            className="code-editor"
+            value={htmlCode}
+            onChange={(e) => setHtmlCode(e.target.value)}
+            placeholder="Write your HTML here..."
+            spellCheck="false"
+          />
+        </div>
+        
+        <div className="editor-container">
+          <div className="editor-header">
+            <Code className="icon" />
+            <span>CSS</span>
+          </div>
+          <textarea
+            className="code-editor"
+            value={cssCode}
+            onChange={(e) => setCssCode(e.target.value)}
+            placeholder="Write your CSS here..."
+            spellCheck="false"
+          />
+        </div>
+      </div>
+      
+      <div className="preview-container">
+        <div className="preview-header">
+          <Play className="icon" />
+          <span>Live Preview</span>
+        </div>
+        <div className="preview-window">
+          <iframe
+            title="Live Preview"
+            sandbox="allow-scripts"
+            srcDoc={previewContent}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 
