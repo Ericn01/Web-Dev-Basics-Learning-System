@@ -92,14 +92,14 @@ const QuizzesPage = () => {
             </Link>
           );
         })}
-      </div>
-
       <button
         className="add-quiz"
         onClick={() => setShowCreateModal(true)}
       >
         + Create a quiz
       </button>
+      </div>
+
 
       {showCreateModal && (
         <CreateQuizForm 
