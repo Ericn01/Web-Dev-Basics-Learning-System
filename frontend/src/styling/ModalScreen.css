@@ -93,13 +93,10 @@
   }
 
 
-  /* Quiz details modal styling */
-
-  /* Add these to your existing CSS file */
 
 .quiz-card {
     position: relative;
-    /* ... your existing quiz-card styles ... */
+ 
   }
   
   .completion-button {

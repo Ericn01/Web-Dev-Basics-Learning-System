@@ -129,7 +129,7 @@
     cursor: pointer;
   }
   .add-quiz {
-    background: var(--accent-color); /* Uses theme's accent color */
+    background: var(--accent-color);
     color: #fff;
     border: none;
     padding: 12px 20px;
@@ -139,17 +139,17 @@
     text-align: center;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    box-shadow: 0 4px 6px var(--card-shadow); /* Adjusts based on theme */
+    box-shadow: 0 4px 6px var(--card-shadow); 
   }
   
   .add-quiz:hover {
-    background-color: var(--accent-hover); /* Hover color adapts to theme */
+    background-color: var(--accent-hover);
     transform: translateY(-2px);
-    box-shadow: 0 6px 8px var(--card-shadow); /* Slightly deeper shadow */
+    box-shadow: 0 6px 8px var(--card-shadow); 
   }
   
   .add-quiz:active {
-    transform: translateY(0); /* Press effect */
+    transform: translateY(0); 
     box-shadow: 0 2px 4px var(--card-shadow);
   }
   
