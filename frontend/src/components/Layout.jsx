@@ -21,6 +21,7 @@ import {
   Moon,
   Code2,
   Settings,
+  Pencil,
   Layout as LayoutIcon
 } from 'lucide-react';
 import '../styling/LayoutStyles.css';

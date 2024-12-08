@@ -75,6 +75,23 @@
   color: var(--accent-color);
 }
 
+.module-edit {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.module-edit:hover {
+  opacity: 0.7; 
+}
+
+.module-edit .lucide-square-pen {
+  color: var(--accent-color);
+  opacity: 1;
+}
+
+
 .loader {
   text-align: center;
   padding: 48px;
@@ -86,3 +103,4 @@
   padding: 48px;
   color: var(--error-text);
 }
+
