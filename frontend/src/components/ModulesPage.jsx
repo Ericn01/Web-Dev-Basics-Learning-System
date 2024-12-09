@@ -64,8 +64,8 @@ const ModulesPage = () => {
               <p>{module.description}</p>
             </div>
             <ChevronRight className="module-arrow" />
-            <button onClick={(e) => handleEditClick(e, module)}>
-              <PenBoxIcon className="module-edit" />
+            <button onClick={(e) => handleEditClick(e, module)} className="module-edit">
+              <PenBoxIcon/>
             </button>
           </Link>
         ))}

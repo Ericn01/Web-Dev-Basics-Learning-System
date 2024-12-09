@@ -21,6 +21,7 @@ import {
   Moon,
   Code2,
   Settings,
+  Pencil,
   Layout as LayoutIcon
 } from 'lucide-react';
 import '../styling/LayoutStyles.css';
@@ -95,8 +96,10 @@ const Layout = ({ children }) => {
               {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
             <div className="logo">
-              <Code className="logo-icon" />
-              <span className="logo-text">TagStart</span>
+             <Link to="/" className="logo-link"> {/* Wrap the logo in a Link to navigate to the home page */}
+                <Code className="logo-icon" />
+                <span className="logo-text">TagStart</span>
+              </Link>
             </div>
           </div>
 
