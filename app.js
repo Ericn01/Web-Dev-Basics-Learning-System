@@ -1,7 +1,5 @@
 const express = require('express');
 const cors = require('cors'); 
-const https = require('https')
-const fs = require('fs');
 
 // Importing all of the necessary routes
 const userAuthRoutes = require('./src/routes/userAuthRoutes');
@@ -18,7 +16,7 @@ app.use(cors(
   {
     origin: ['https://learn-webdev-basics.netlify.app', 'http://localhost:5173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: '*',
     credentials: true
   }
 )); 
