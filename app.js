@@ -12,7 +12,15 @@ const httpDemoRoutes = require('./src/routes/httpDemo');
 
 const app = express();
 
-app.use(cors()); 
+app.use(cors(
+  {
+    origin: ['https://learn-webdev-basics.netlify.app/', 'http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  }
+)); 
+
 app.use(express.json());
 
 app.use('/webdev-learning/api', userAuthRoutes);
