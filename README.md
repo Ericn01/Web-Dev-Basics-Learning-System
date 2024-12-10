@@ -1,10 +1,19 @@
 # Project Description
 This project aims to develop a learning system that effectively teaches key concepts covered in the COMP 2511 class. The system will serve as an interactive educational tool designed to enhance students' learning of the basics of client side web development, including semantic HTML, building HTML forms and tables, HTTP methods (‘GET’ and POST’), along with modern CSS techniques. The platform will include engaging learning modules, quizzes, and a progress tracker to help students reinforce their learning through practical exercises.
 
-
 # API Documentation
 
-This document provides comprehensive documentation for all API endpoints in the web application.
+This document provides comprehensive documentation for all API endpoints in the web application. 
+
+Base URL:
+
+```javascript
+const BASE_URL = '/webdev-learning/api';
+const SERVER_EXTERNAL_IP = 34.41.137.211;
+const SERVER_PORT = 8000 ;
+
+// Sample call (via Postman): GET 34.41.137.211:8000/webdev-learning/api/user/profiles OR GET `${SERVER_EXTERNAL_IP}:${SERVER_PORT}/${BASE_URL}/user/profiles
+```
 
 ## Table of Contents
 - [HTTP Demo Endpoints](#http-demo-endpoints)
@@ -30,12 +39,126 @@ This document provides comprehensive documentation for all API endpoints in the 
   - [POST /login](#post-login)
   - [POST /logout](#post-logout)
   - [POST /admin/promote](#post-adminpromote)
-- [FAQ Endpoints](#faq-endpoints)
-  - [GET /faqs](#faqs)
-
+- [FAQ and Feedback Endpoints](#faq-and-feedback-endpoints)
+  - [GET /faqs](#get-faqs)
+  - [POST /feedback](#post-feedback)
+- [Progress Endpoints](#progress-endpoints)
+  - [GET /progress](#get-progress)
+  - [POST /progress/module](#post-progressmodule)
+  - [POST /progress/quiz](#post-progressquiz)
+ 
 ## HTTP Demo Endpoints
 
-[Previous HTTP Demo documentation remains unchanged...]
+### GET /http-demo
+
+Educational endpoint that demonstrates the characteristics and proper usage of GET requests.
+
+#### Request
+- Method: `GET`
+- URL: `/http-demo`
+- Authentication: None required
+
+#### Response
+
+**Success Response (200)**
+```json
+{
+  "success": true,
+  "message": "This is a response from a GET request",
+  "request": {
+    "method": "GET",
+    "headers": "<request headers>",
+    "url": "/http-demo",
+    "timestamp": "<ISO timestamp>"
+  },
+  "explanation": {
+    "purpose": "GET requests are used to retrieve data from a server",
+    "characteristics": [
+      "Data is sent through URL parameters",
+      "Requests can be cached",
+      "Should not modify server data",
+      "Idempotent (same request always returns same result)"
+    ]
+  }
+}
+```
+
+**Error Response (500)**
+```json
+{
+  "success": false,
+  "message": "An error occurred processing the GET request",
+  "error": "<error message>"
+}
+```
+
+### POST /http-demo
+
+Educational endpoint that demonstrates the characteristics and proper usage of POST requests.
+
+#### Request
+- Method: `POST`
+- URL: `/http-demo`
+- Authentication: None required
+- Body:
+  ```json
+  {
+    "data": "<any data>"
+  }
+  ```
+
+#### Response
+
+**Success Response (200)**
+```json
+{
+  "success": true,
+  "message": "This is a response from a POST request",
+  "request": {
+    "method": "POST",
+    "headers": "<request headers>",
+    "body": "<received data>",
+    "url": "/http-demo",
+    "timestamp": "<ISO timestamp>"
+  },
+  "receivedData": {
+    "content": "<received data>",
+    "length": "<data length>",
+    "type": "<data type>"
+  },
+  "explanation": {
+    "purpose": "POST requests are used to send data to a server",
+    "characteristics": [
+      "Data is sent in the request body",
+      "Requests are not cached by default",
+      "Can modify server data",
+      "Not idempotent (same request might give different results)"
+    ]
+  }
+}
+```
+
+**Error Response (500)**
+```json
+{
+  "success": false,
+  "message": "An error occurred processing the POST request",
+  "error": "<error message>"
+}
+```
+
+## Error Handling
+
+All endpoints follow a consistent error response format:
+```json
+{
+  "success": false,
+  "message": "<error description>",
+  "error": "<detailed error message>"
+}
+```
+
+---
 
 ## Quiz Endpoints
 
@@ -828,4 +951,262 @@ Promotes a user to admin role. Only accessible by existing admins.
    - Must be unique in the system
    - Must follow standard email format (example@domain.com)
 
-## FAQ Endpoint
+## FAQ and Feedback Endpoints
+
+### GET /faqs
+
+Retrieves all frequently asked questions and their answers.
+
+#### Request
+- Method: `GET`
+- URL: `/faqs`
+- Authentication: None required
+
+#### Response
+
+**Success Response (200)**
+```json
+{
+  "success": true,
+  "message": "Showing all items from the table",
+  "data": [
+    {
+      "question": "<question_text>",
+      "answer": "<answer_text>"
+    }
+  ]
+}
+```
+
+**Error Responses**
+- 404: No FAQs found
+```json
+{
+  "success": false,
+  "message": "No items have been found"
+}
+```
+- 500: Server error
+```json
+{
+  "success": false,
+  "message": "A server error occurred..."
+}
+```
+
+### POST /feedback
+
+Submits new user feedback.
+
+#### Request
+- Method: `POST`
+- URL: `/feedback`
+- Authentication: None required
+- Body:
+  ```json
+  {
+    "user_id": "<user_id>",        // required, positive integer
+    "feedback_text": "<feedback>"   // required
+  }
+  ```
+
+#### Response
+
+**Success Response (201)**
+```json
+{
+  "success": true,
+  "message": "Feedback added successfully.",
+  "data": {
+    "user_id": "<user_id>",
+    "feedback_text": "<feedback_text>"
+  }
+}
+```
+
+**Error Responses**
+- 400: Missing required fields
+```json
+{
+  "success": false,
+  "message": "Your POST request is missing a required field. The user ID or feedback text is empty."
+}
+```
+- 400: Invalid user ID
+```json
+{
+  "success": false,
+  "message": "User ID must be a positive number."
+}
+```
+- 500: Server error
+```json
+{
+  "success": false,
+  "message": "A server error occurred while adding feedback."
+}
+```
+## Progress Endpoints
+
+### GET /progress
+
+Retrieves the complete learning progress history for the authenticated user.
+
+#### Request
+- Method: `GET`
+- URL: `/progress`
+- Authentication: Required (JWT Bearer Token)
+- Headers:
+  ```
+  Authorization: Bearer <token>
+  ```
+
+#### Response
+
+**Success Response (200)**
+```json
+{
+  "progress": {
+    "modules_completed": [1, 2, 3],
+    "quizzes_completed": [1, 2, 4],
+    "scores": {
+      "quiz_id_1": 85,
+      "quiz_id_2": 90,
+      "quiz_id_4": 95
+    },
+    "recent_activity": [
+      {
+        "type": "quiz",
+        "id": 4,
+        "score": 95,
+        "completed_at": "2024-12-09T10:30:00Z"
+      }
+    ]
+  }
+}
+```
+
+**Error Responses**
+- 401: Unauthorized (missing or invalid token)
+- 500: Server error
+```json
+{
+  "message": "Error retrieving progress",
+  "error": "<error details>"
+}
+```
+
+### POST /progress/module
+
+Marks a specific module as completed for the authenticated user.
+
+#### Request
+- Method: `POST`
+- URL: `/progress/module`
+- Authentication: Required (JWT Bearer Token)
+- Headers:
+  ```
+  Authorization: Bearer <token>
+  ```
+- Body:
+  ```json
+  {
+    "module_id": "<module_id>"    // required, integer
+  }
+  ```
+
+#### Response
+
+**Success Response (200)**
+```json
+{
+  "message": "Module progress updated successfully"
+}
+```
+
+**Error Responses**
+- 400: Missing module ID
+```json
+{
+  "message": "Module ID is required"
+}
+```
+- 401: Unauthorized (missing or invalid token)
+- 500: Server error
+```json
+{
+  "message": "Error updating module progress",
+  "error": "<error details>"
+}
+```
+
+### POST /progress/quiz
+
+Records a quiz completion with its score for the authenticated user.
+
+#### Request
+- Method: `POST`
+- URL: `/progress/quiz`
+- Authentication: Required (JWT Bearer Token)
+- Headers:
+  ```
+  Authorization: Bearer <token>
+  ```
+- Body:
+  ```json
+  {
+    "module_id": "<module_id>",    // required, integer
+    "quiz_id": "<quiz_id>",        // required, integer
+    "score": "<score>"             // required, integer between 0 and 100
+  }
+  ```
+
+#### Response
+
+**Success Response (200)**
+```json
+{
+  "message": "Quiz progress updated successfully"
+}
+```
+
+**Error Responses**
+- 400: Missing required fields
+```json
+{
+  "message": "Module ID, Quiz ID, and score are required"
+}
+```
+- 400: Invalid score
+```json
+{
+  "message": "Score must be between 0 and 100"
+}
+```
+- 401: Unauthorized (missing or invalid token)
+- 500: Server error
+```json
+{
+  "message": "Error updating quiz progress",
+  "error": "<error details>"
+}
+```
+
+### Progress Notes
+
+1. Data Format:
+   - All timestamps are in ISO 8601 format (e.g., "2024-12-09T10:30:00Z")
+   - Scores must be integers between 0 and 100
+   - Module and Quiz IDs must be positive integers
+
+2. Progress Tracking:
+   - Progress entries are unique per user, module, and quiz combination
+   - Submitting progress for an existing entry will update it with:
+     - New completion time
+     - New score (for quizzes)
+   - Recent activity is ordered by completion date, most recent first
+
+3. Authentication:
+   - All progress endpoints require a valid JWT token
+   - Token must be included in Authorization header as Bearer token
+
