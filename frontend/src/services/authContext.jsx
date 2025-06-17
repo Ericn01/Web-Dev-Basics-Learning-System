@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  console.log(user)
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {

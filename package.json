@@ -2,8 +2,9 @@
   "name": "webdev-learning",
   "version": "1.0.0",
   "description": "A web application that teaches users how to write high quality HTML and CSS code in an efficient manner!",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
