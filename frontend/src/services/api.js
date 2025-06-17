@@ -5,7 +5,7 @@ const testApi = axios.create({
 });
 
 const api = axios.create({
-  baseURL: 'http://34.41.137.211:8000/webdev-learning/api' // Setting up the base URL 
+  baseURL: 'https://web-dev-basics-learning-system.onrender.com/api' // Setting up the base URL 
 });
 
 api.interceptors.request.use(
