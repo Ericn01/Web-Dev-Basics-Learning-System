@@ -14,7 +14,7 @@ const app = express();
 
 app.use(cors(
   {
-    origin: ['https://learn-webdev-basics.netlify.app', 'http://localhost:5173'],
+    origin: ['https://web-dev-basics-learning-system.onrender.com', 'http://localhost:5173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: '*',
     credentials: true
