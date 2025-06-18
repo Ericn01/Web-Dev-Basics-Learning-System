@@ -19,12 +19,12 @@ const App = () => {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Router basename={import.meta.env.BASE_URL}>
+        <Router>
           <Layout>
             <Routes>
               <Route path="/admin/*" element={
                 <AdminRoute>
-                  <AdminDashboard />
+                  <AdminDashboard/>
                 </AdminRoute>
               } />
               <Route path="/login" element={<Login />} />
