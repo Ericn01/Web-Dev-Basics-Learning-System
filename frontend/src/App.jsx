@@ -13,14 +13,13 @@ import HttpDemo from './components//HTTPDemo';
 import FaqComponent from './components/FaqComponent';
 import AdminDashboard from './components/AdminDashboard';
 import { ThemeProvider } from './services/themeContext';
-
 import './styling/theme.css';
 
 const App = () => {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Router>
+        <Router basename={import.meta.env.BASE_URL}>
           <Layout>
             <Routes>
               <Route path="/admin/*" element={
@@ -33,29 +32,29 @@ const App = () => {
               <Route path="/" element={<HomePage />} />
               <Route path="/modules" element={<ModulesPage />} />
               <Route path="/modules/:id" element={<ModuleDetail />} />
-              <Route path="/quizzes" 
+              <Route path="/quizzes"
                 element={
                   <ProtectedRoute>
                     <QuizzesPage />
                   </ProtectedRoute>
-                } 
+                }
               />
               <Route path="/quizzes/:id" element={<QuizDetail/>} />
-              <Route 
-                path="/profile" 
+              <Route
+                path="/profile"
                 element={
                   <ProtectedRoute>
                     <ProfilePage />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/progress" 
+              <Route
+                path="/progress"
                 element={
                   <ProtectedRoute>
                     <ProgressPage />
                   </ProtectedRoute>
-                } 
+                }
               />
               <Route path="/http-demo" element={<HttpDemo />} />
               <Route path="/faq" element={<FaqComponent />} />
@@ -66,6 +65,5 @@ const App = () => {
     </ThemeProvider>
   );
 };
-
 
 export default App

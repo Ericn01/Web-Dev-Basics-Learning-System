@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>TagStart</title>
+    <script>
+        // Redirects from a 404 to the main page.
+        var l = window.location;
+        l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + l.pathname.split('/').slice(0, -1).concat('', '').join('/') + '#' + l.pathname.slice(1).split('/').slice(1).join('/') + (l.search || ''));
+    </script>
+</head>
+<body>
+</body>
+</html>
